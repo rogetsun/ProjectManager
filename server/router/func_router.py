@@ -44,8 +44,8 @@ class FuncsHandler(BaseHandler):
 
 
 class FuncDownloadHandler(BaseHandler):
-    @router
     @asynchronous
+    @router
     def get(self):
         func_ids = self.get_argument("fid")
         logger.debug(type(func_ids))
@@ -86,6 +86,7 @@ class FuncDownloadHandler(BaseHandler):
 
             self.render("dl.html", href='dl/' + os.path.basename(real_zip_file_name),
                         file=os.path.basename(real_zip_file_name))
+            self.finish()
         else:
             raise HTTPError(status_code=404, log_message='未选择下载模块!')
             # zipfile.ZipFile()
