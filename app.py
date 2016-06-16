@@ -1,8 +1,10 @@
 # coding:utf-8
-from server import server_config
+import os
+
 import tornado
 from tornado.web import Application
-import os
+
+from server import server_config
 from server.router import handlers
 
 staticHandlers = [
@@ -16,7 +18,7 @@ staticHandlers = [
 setting = dict(
     template_path=os.path.dirname(__file__) + "/web",
     cookie_secret="0987654poiuytrewqlkjhgfdsamnbvcxzsongywSONGYWLITIANXINGlitianxing123abc,./<>?",
-    login_url="/login",
+    login_url="/",
     debug=server_config.debug
 )
 print setting
