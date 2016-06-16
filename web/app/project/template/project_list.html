@@ -1,0 +1,63 @@
+<md-content layout="row" layout-align="left start" style="flex-wrap: wrap;" flex>
+    <md-card ng-repeat="p in projects" style="height: 200px;width: 250px;cursor: pointer;"
+             ui-sref="project.detail({project_id:p.project_id})">
+        <md-card-header class="uv-card-header">
+            {{p.project_name}}
+        </md-card-header>
+        <md-card-content style="font-size: 12px;overflow: scroll;" flex>
+            <p>创建时间:{{p.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</p>
+            <p>创建人:{{p.login_no}}-{{p.login_name}}</p>
+            <i>
+                {{p.project_desc}}
+            </i>
+        </md-card-content>
+    </md-card>
+    <md-card style="height: 200px;width: 250px;cursor: pointer;" ng-click="addProject($event)" layout="column"
+             layout-align="center center">
+        <md-icon md-svg-icon="plus"
+                 style="color:#ddd;margin:50px;"></md-icon>
+        <md-tooltip md-delay="1000">添加新项目</md-tooltip>
+    </md-card>
+</md-content>
+<script type="text/ng-template" id="project_add_template">
+    <md-dialog aria-label="Mango (Fruit)" ng-cloak>
+        <form name="projectForm">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 style="margin-left: 20px;">项目添加</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" layout="column">
+                    <md-input-container>
+                        <label>项目名称</label>
+                        <input type="text" required name="project_name" ng-model="project_name" flex>
+                        <div ng-messages="projectForm.project_name.$error" ng-show="projectForm.project_name.$dirty">
+                            <div ng-message="required">请输入项目名称</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>项目描述</label>
+                        <textarea type="text" required name="project_desc" ng-model="project_desc" cols="100" rows="3"
+                                  minlength="6"></textarea>
+                        <div ng-messages="projectForm.project_desc.$error" ng-show="projectForm.project_desc.$dirty">
+                            <div ng-message="required">请输入项目描述</div>
+                            <div ng-message="minlength">最短6位</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="cancel()" aria-label="cancel">
+                    取消
+                </md-button>
+                <md-button ng-click="confirm()" ng-disabled="projectForm.$invalid" style="margin-right:20px;"
+                           aria-label="confirm" class="md-raised md-primary">
+                    确定
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

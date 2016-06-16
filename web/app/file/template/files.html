@@ -1,0 +1,189 @@
+<md-subheader>
+    <md-card style="margin:-16px;" class="transition">
+        <md-content layout="row" layout-align="start center">
+            <md-button class="md-button md-primary" ng-click="addFile($event)">
+                <md-icon md-svg-icon="plus" class="md-mini" style="margin-top: -3px;"></md-icon>
+                添加
+            </md-button>
+            <span flex></span>
+            <md-icon md-svg-icon="{{showQC?'expand-down':'expand-left'}}" class="md-icon md-mini"
+                     style="cursor:pointer;margin-right: 10px;"
+                     ng-click="showQC=!showQC"></md-icon>
+        </md-content>
+        <md-content md-theme="darkTheme2" class="md-padding slide-down" ng-show="showQC">
+            <div>
+                <md-checkbox ng-click="toggleAll()" ng-checked="isChecked()" md-indeterminate="isIndeterminate()"
+                             class="md-accent">
+                    {{isChecked()?"取消":""}}全选
+                </md-checkbox>
+            </div>
+            <div layout="row" style="flex-wrap: wrap;" layout-align="start start">
+                <md-checkbox ng-repeat="ft in file_types" ng-checked="isExists(ft.ft_id)" class="md-primary"
+                             ng-click="toggle(ft.ft_id)">
+                    {{ft.ft_name}}({{ft.count}})
+                </md-checkbox>
+                <md-icon md-svg-icon="expand-up" class="md-mini" ng-click="showQC = !showQC"
+                         style="margin:2px 10px 2px 20px;vertical-align: top;"></md-icon>
+            </div>
+        </md-content>
+    </md-card>
+</md-subheader>
+<md-content>
+    <table class="table table-condensed table-striped table-hover">
+        <thead>
+        <th>文件类型</th>
+        <th ng-click="orderFiles('file_path_name')" style="cursor:pointer;">
+            文件
+            <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
+                     ng-show="orderKey=='file_path_name'"></md-icon>
+        </th>
+        <th>最新版本号</th>
+        <th ng-click="orderFiles('create_time')" style="cursor:pointer;">
+            创建时间
+            <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
+                     ng-show="orderKey=='create_time'"></md-icon>
+        </th>
+        <th>创建人</th>
+        </thead>
+        <tr ng-repeat="f in files|uvIndexOf:'ft_id':selectedFTIDs|orderBy:orderKey:orderReverse">
+            <td>{{ftJSON[f.ft_id].ft_name}}</td>
+            <td>{{f.file_path_name}}</td>
+            <td>
+                <button class="btn btn-xs btn-default" style="width:50px;" ng-click="showFileHis($event,f)">
+                    {{f.curr_version}}
+                </button>
+            </td>
+            <td>{{f.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{f.login_no}}-{{f.login_name}}</td>
+        </tr>
+        <tr ng-show="!files || files.length == 0">
+            <td colspan="5">无文件,点我<a href="" ng-click="addFile($event)">添加</a></td>
+        </tr>
+    </table>
+</md-content>
+
+<script type="text/ng-template" id="def_file_template">
+    <md-dialog aria-label="file_type" ng-cloak style="min-width: 600px;">
+        <form name="fileForm">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 style="margin-left: 10px;">项目 [{{project.project_name}}] 文件添加</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" layout="column">
+                    <md-input-container>
+                        <label>文件类型</label>
+                        <md-select placeholder="" ng-model="ft" md-on-open="loadFileType()" name="ft">
+                            <md-option ng-value="ft" ng-repeat="ft in file_types">{{ft.ft_name}}</md-option>
+                        </md-select>
+                        <div ng-messages="fileForm.ft.$error" ng-show="fileForm.ft.$dirty">
+                            <div ng-message="required">请选择文件类型</div>
+                        </div>
+                    </md-input-container>
+                    <div layout="row" layout-align="start center">
+                        <md-input-container ng-show="ft" flex="initial">
+                            <label>目录前缀</label>
+                            <input type="text" ng-model="ft.ft_folder" disabled>
+                        </md-input-container>
+                        <md-input-container flex>
+                            <label>文件目录(可以为空)</label>
+                            <input type="text" name="folder" ng-model="folder" ng-blur="folderChange()">
+                        </md-input-container>
+                    </div>
+                    <md-content ngf-drop="addFile($files)" ngf-multiple="true"
+                                style="min-height: 100px;position: relative;border: 1px dotted #9d9d9d;border-radius: 5px;">
+                        <div ng-show="!files || files.length == 0"
+                             style="top:50%;margin-top:-25px;color:#ddd;font-size: 50px;position: absolute;height: 50px;width:100%;line-height: 50px;text-align: center;">
+                            将文件拖入
+                        </div>
+                        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+                        <table class="table-condensed table table-striped"
+                               ng-show="files&&files.length > 0">
+                            <thead>
+                            <th>文件名</th>
+                            <th>当前版本</th>
+                            <th>新版本</th>
+                            <th>大小</th>
+                            <th>
+                                <md-icon md-svg-icon="cogwheel" class="md-mini" style="margin:0 10px;"></md-icon>
+                            </th>
+                            </thead>
+                            <tr ng-repeat="f in files">
+                                <td>{{f.name}}</td>
+                                <td>
+                                    <span class="btn btn-xs btn-default"
+                                          style="width:50px;cursor: auto;" disabled>{{f.curr_version || '无'}}</span>
+                                </td>
+                                <td style="width:80px;">
+                                    <span class="btn btn-xs " ng-class="f.version?'btn-info':'btn-default'"
+                                          style="width:60px;cursor: auto;" disabled="">{{f.version||'上传生成'}}</span>
+                                </td>
+                                <td>{{f.size / 1024|number:2}}K</td>
+                                <td>
+                                    <md-icon class="md-mini md-warn" md-svg-icon="delete"
+                                             style="cursor: pointer;margin:0 10px;"
+                                             ng-click="delFile(f)"></md-icon>
+                                </td>
+                            </tr>
+                        </table>
+                    </md-content>
+                </div>
+            </md-dialog-content>
+            <md-dialog-content>
+                <md-progress-linear ng-show="uploading||percent" value="{{percent}}"
+                                    md-mode="determinate"></md-progress-linear>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="cancel()" aria-label="cancel">
+                    取消
+                </md-button>
+                <md-button ng-click="confirm()" ng-disabled="fileForm.$invalid || uploading" style="margin-right:20px;"
+                           aria-label="confirm" class="md-raised md-primary">
+                    上传
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
+
+<script type="text/ng-template" id="file_his_template">
+    <md-dialog style="min-width: 800px;">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 style="margin-left: 10px;">[{{file.file_path_name}}]文件历史版本</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <table class="table table-condensed table-striped">
+                <thead>
+                <th>#</th>
+                <th>文件类型</th>
+                <th>文件</th>
+                <th>版本</th>
+                <th>创建时间</th>
+                <th>创建人</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="f in files">
+                    <td>{{f.file_id}}</td>
+                    <td>{{ftJSON[f.ft_id].ft_name}}</td>
+                    <td>{{f.file_path_name}}</td>
+                    <td><span class="btn btn-xs btn-default" disabled>{{f.version}}</span></td>
+                    <td>{{f.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{f.login_no}}-{{f.login_name}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <span flex></span>
+            <md-button ng-click="cancel()" aria-label="cancel" style="margin-right:20px;">
+                关闭
+            </md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</script>

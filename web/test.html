@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="assets/img/p.png">
+    <title>Title</title>
+    <link rel="stylesheet" href="assets/diy/css/index.min.css">
+    <link rel="stylesheet" href="assets/node_modules/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="web/assets/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="assets/node_modules/angular-loading-bar/build/loading-bar.min.css">
+    <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog-theme-default.min.css">
+    <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog-theme-plain.min.css">
+    <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog.min.css">
+</head>
+<body>
+<div ng-app="app" ng-controller="ctrl">
+    <md-card>
+        <md-card-content>{{ret_code}}</md-card-content>
+        <md-card-content>{{ret_msg}}</md-card-content>
+    </md-card>
+    <md-divider></md-divider>
+    <md-progress-linear md-mode="determinate" value="50"></md-progress-linear>
+    <md-divider></md-divider>
+    <md-card class="md-warn">
+        <md-chips ng-model="selectedFuncs" md-require-match="true">
+            <md-autocomplete md-search-text="ss.st" md-items="f in getFunc(ss.st)" md-item-text="f.name"
+                             md-autoselect="true" placeholder="fdsfds">
+                <md-item-template>
+                    <span md-highlight-text="ss.st">{{f.name}}-{{f.id}}</span>
+                </md-item-template>
+            </md-autocomplete>
+            <md-chip-template style="cursor: default;" layout="row" layout-align="start center">
+                {{$chip.name}}
+                <button class="btn btn-xs btn-default" style="" layout="row"
+                        layout-align="center center">{{$chip.id}}
+                </button>
+            </md-chip-template>
+
+        </md-chips>
+
+        <!--<md-autocomplete  md-search-text="ss.st"-->
+        <!--md-items="f in getFunc(ss.st)" md-item-text="f.name"-->
+        <!--md-autoselect="true">-->
+        <!--<md-item-template>-->
+        <!--<span md-highlight-text="ss.st">{{f.name}}-{{f.id}}</span>-->
+        <!--</md-item-template>-->
+        <!--</md-autocomplete>-->
+    </md-card>
+    <br>
+    <md-divider></md-divider>
+    <div>selectedItem:{{ss.selectedItem}}</div>
+    <div>searchText:{{ss.st}}</div>
+    <div>itemText:{{ss.it}}</div>
+    <md-divider></md-divider>
+    <br>
+    <table class="table table-condensed">
+        <tr ng-repeat="f in selectedFuncs">
+            <td>{{f|json}}</td>
+        </tr>
+    </table>
+</div>
+</body>
+<script src="assets/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="assets/node_modules/angular/angular.js"></script>
+<script src="assets/node_modules/angular-messages/angular-messages.min.js"></script>
+<script src="assets/node_modules/angular-animate/angular-animate.min.js"></script>
+<script src="assets/node_modules/angular-aria/angular-aria.min.js"></script>
+<script src="assets/node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="assets/node_modules/angular-material/angular-material.min.js"></script>
+<script src="assets/node_modules/angular-loading-bar/build/loading-bar.min.js"></script>
+<script src="assets/node_modules/ng-dialog/js/ngDialog.min.js"></script>
+<script src="assets/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+<script>
+    angular.module('app', ['ngMaterial'])
+            .controller('ctrl', function ($scope, $filter, $q) {
+                $scope.vm = {};
+                $scope.$watch('vm', function (v) {
+                    console.log(v);
+                });
+                $scope.percent = 50;
+                $scope.selectedFuncs = [];
+                $scope.funcs = [
+                    {name: 'lll', id: 1}
+                    , {id: 2, name: 'name2'}
+                    , {id: 3, name: 'name3'}
+                    , {id: 4, name: 'name4'}
+                    , {id: 5, name: 'name5'}
+                    , {id: 6, name: 'name6'}
+                    , {id: 7, name: 'name7'}
+                    , {id: 8, name: 'name8'}
+
+                ];
+                $scope.sic = function (si) {
+                    console.log(si);
+                    if (si)return si.name;
+                };
+                $scope.getFunc = function (q) {
+                    var d = $q.defer();
+                    var fs = $filter('filter')($scope.funcs, q);
+                    d.resolve(fs);
+                    return d.promise;
+                };
+                $scope.addFunc = function (f) {
+                    console.log(f);
+                    return "si";
+                };
+                $scope.itemText = function (s) {
+                    console.log(s);
+                    return 'it';
+                };
+                $scope.ss = {};
+            })
+</script>
+</html>

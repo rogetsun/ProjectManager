@@ -1,0 +1,165 @@
+<md-content layout="row" layout-align="start start">
+    <md-card flex="33">
+        <md-card-header class="uv-card-header">
+            项目功能模块
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_fun" style="margin:0;"
+                       ng-click="downloadFunc()">
+                <md-icon md-svg-icon="pkg-download" class="md-mini"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_fun" style="margin:0;"
+                       ng-click="defFunc()">
+                <md-icon md-svg-icon="plus" class="md-mini"></md-icon>
+            </md-button>
+        </md-card-header>
+        <md-card-content>
+            <div uv-tree="{{treeName}}" uv-tree-data="funcList" uv-tree-multi-select="true"
+                 uv-tree-node-id-key="func_id"
+                 uv-tree-node-name-key="func_name" uv-tree-node-parent-id-key="par_func_id"
+                 uv-tree-node-selected-key="selected" uv-tree-select-node-func="defFunc()"></div>
+        </md-card-content>
+    </md-card>
+    <md-card flex>
+        <md-card-header class="uv-card-header">
+            项目BUG
+            <span flex></span>
+            <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_bug">
+                <md-icon md-svg-icon="plus" class="md-mini" ng-click="defBug()"></md-icon>
+            </md-button>
+        </md-card-header>
+    </md-card>
+</md-content>
+
+<!--功能模块编辑sidenav-->
+<md-sidenav md-component-id="func_def_sidenav" class="md-sidenav-right" style="min-width: 500px;"
+            layout-align="start stretch" layout="column">
+    <md-card layout-fill>
+        <md-card-header class="uv-card-header" layout="row" layout="start center">
+            <md-icon md-svg-icon="expand-right" class="md-mini" ng-click="exitFunc()"></md-icon>
+            <h5 flex layout="column" layout-align="center center">
+                {{editFunc.func_id?editFunc.func_name+'模块编辑':'新建模块'}}</h5>
+        </md-card-header>
+        <!--功能模块基本信息-->
+        <form name="funcForm">
+            <md-content md-theme="darkTheme2" layout="column" layout-align="start stretch"
+                        style="padding:16px 0 0;">
+                <div layout="row" layout-align="start start" style="height: 70px;overflow: hidden;">
+                    <md-input-container flex>
+                        <label>模块名称</label>
+                        <input type="text" ng-model="editFunc.func_name" name="func_name" required>
+                        <div ng-messages="funcForm.func_name.$error" ng-show="funcForm.func_name.$dirty">
+                            <div ng-message="required">请输入模块名称</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container ng-show="false" flex>
+                        <label>par_func_id</label>
+                        <input type="text" ng-model="editFunc.par_func_id" disabled>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>上级模块</label>
+                        <input type="text" name="par_func_name" ng-model="funcJSON[editFunc.par_func_id].func_name"
+                               ng-focus="selectFunc(editFunc.par_func_id)" ng-click="selectFunc(editFunc.par_func_id)"
+                               readonly>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>模块编码</label>
+                        <input type="text" name="func_code" ng-model="editFunc.func_code">
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="center center">
+                    <md-icon md-svg-icon="expand-down" class="md-mini" style="cursor:pointer;" ng-show="!showFuncQC"
+                             ng-click="showFuncQC = !showFuncQC"></md-icon>
+                </div>
+            </md-content>
+        </form>
+        <!--功能模块文件类型筛选-->
+        <md-content md-theme="darkTheme2" class="slide-down" ng-show="showFuncQC">
+            <div style="margin:0 16px;">
+                <md-checkbox ng-click="toggleAll()" ng-checked="isChecked()"
+                             md-indeterminate="isIndeterminate()"
+                             class="md-accent">
+                    {{isChecked()?"取消":""}}全选
+                </md-checkbox>
+            </div>
+            <div layout="row" style="flex-wrap: wrap;margin:0 16px;" layout-align="start start">
+                <md-checkbox ng-repeat="ft in file_types" ng-checked="isExists(ft.ft_id)" class="md-primary"
+                             ng-click="toggle(ft.ft_id)">
+                    {{ft.ft_name}}({{ft.count}})
+                </md-checkbox>
+            </div>
+            <div layout="row" layout-align="center center">
+                <md-icon md-svg-icon="expand-up" class="md-mini" style="cursor:pointer;"
+                         ng-click="showFuncQC = !showFuncQC"></md-icon>
+            </div>
+        </md-content>
+        <!--功能模块中,不同文件类型输入选择文件部分-->
+        <md-content flex>
+            <div ng-repeat="ft in file_types|uvIndexOf:'ft_id':selectedFTIDs">
+                <md-card style="margin:3px;">
+                    <md-card-header class="uv-card-header">
+                        {{ft.ft_name}}[{{ft.ft_folder}}]
+                    </md-card-header>
+                    <md-chips ng-model="editFunc.ftFiles[ft.ft_id]" class="md-mini" style="margin-top: 10px;"
+                              md-require-match="true">
+                        <md-autocomplete md-items="f in searchFuncFiles(ftFiles[ft.ft_id],serTxt)"
+                                         md-item-text="f.file_path_name"
+                                         md-search-text="serTxt" md-autoselect="true" placeholder="输入文件路径名称筛选">
+                            <md-item-template>
+                                <span md-highlight-text="serTxt">{{f.file_path_name}}</span>
+                            </md-item-template>
+                            <md-not-found>
+                                {{(!ftFiles[ft.ft_id] || ftFiles[ft.ft_id].length == 0)?'没有文件':'无匹配文件'}}
+                            </md-not-found>
+                        </md-autocomplete>
+                        <md-chip-template class="md-focused">
+                            {{$chip.file_path_name}}
+                            <button class="btn btn-xs btn-default">{{$chip.curr_version}}</button>
+                        </md-chip-template>
+                    </md-chips>
+                </md-card>
+
+            </div>
+        </md-content>
+        <md-content layout="row" layout-align="center center">
+            <md-button class="md-primary md-raised" ng-click="saveFunc()" ng-disabled="funcForm.$invalid">保存</md-button>
+            <md-button class="" ng-click="exitFunc()">取消</md-button>
+        </md-content>
+    </md-card>
+</md-sidenav>
+
+
+<!--func选择dialog-->
+<script type="text/ng-template" id="select_func_template">
+    <md-dialog style="min-width:500px;min-height: 400px;" layout="column">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                上级功能模块选择
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="md-padding" flex>
+            <div uv-tree="{{parFuncSelectTreeName}}" uv-tree-node-id-key="func_id" uv-tree-data="funcs"
+                 uv-tree-node-name-key="func_name" uv-tree-node-parent-id-key="par_func_id"
+                 uv-tree-node-selected-key="selected"></div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <span flex></span>
+            <md-button ng-click="cancel()">取消</md-button>
+            <md-button ng-click="confirm()" class="md-button md-raised md-primary">确定</md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</script>
+
+
+<!--bug编辑-->
+<md-sidenav md-component-id="bug_def_sidenav" class="md-sidenav-left" style="min-width: 500px;"
+            layout="column" layout-align="start stretch">
+    <md-card flex style="margin:3px;">
+        <md-card-header class="uv-card-header" layout-align="start center" layout="row">
+            <h5 flex layout="column" layout-align="center center">[{{editFunc.func_name}}]编辑</h5>
+            <md-icon md-svg-icon="expand-left" class="md-mini" ng-click="exitBug()"></md-icon>
+        </md-card-header>
+        <md-card-content>
+            bug def panel
+        </md-card-content>
+    </md-card>
+</md-sidenav>

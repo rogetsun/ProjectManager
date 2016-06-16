@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <link rel="icon" href="assets/img/p.png">
+    <meta charset="UTF-8">
+    <meta content="text/html;charset:utf-8" http-equiv="Content-Type">
+    <meta http-equiv="x-ua-compatible" content="chrome=1,IE=Edge">
+    <base href="/">
+    <title>项目管理</title>
+    <link rel="stylesheet" href="assets/diy/css/index.min.css">
+    <link rel="stylesheet" href="assets/node_modules/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="assets/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/diy/css/ng-animation.min.css">
+    <!--<link rel="stylesheet" href="web/assets/bootstrap/css/bootstrap-theme.min.css">-->
+    <link rel="stylesheet" href="assets/node_modules/angular-loading-bar/build/loading-bar.min.css">
+    <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog-theme-default.min.css">
+    <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog-theme-plain.min.css">
+    <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog.min.css">
+    <link rel="stylesheet" href="assets/diy/uv-tree/dtree.css">
+</head>
+<body ng-app="index-app" layout="column">
+<div ui-view layout="column" flex></div>
+</body>
+<script src="assets/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="assets/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="assets/node_modules/angular/angular.js"></script>
+<script src="assets/node_modules/angular-messages/angular-messages.min.js"></script>
+<script src="assets/node_modules/angular-animate/angular-animate.min.js"></script>
+<script src="assets/node_modules/angular-aria/angular-aria.min.js"></script>
+<script src="assets/node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="assets/node_modules/angular-material/angular-material.min.js"></script>
+<script src="assets/node_modules/angular-loading-bar/build/loading-bar.min.js"></script>
+<script src="assets/node_modules/ng-dialog/js/ngDialog.min.js"></script>
+<script src="assets/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+<!--diy公共插件-->
+<script src="dist/pub.js"></script>
+<!--路由-->
+<script src="dist/router.js"></script>
+
+<!--自定义指令-->
+<script src="dist/directive.min.js"></script>
+<!--业务js-->
+<script src="dist/controller.js"></script>
+<!--资源服务-->
+<script src="dist/resource.js"></script>
+<script>
+    //禁用右键,括选
+    //    window.document.oncontextmenu = new Function("event.returnValue=false");
+    //    window.document.onselectstart = new Function("event.returnValue=false");
+    angular.module('index-app',
+            [
+                'ngMessages', 'ngMaterial', 'ui.router',
+                'uv.service.loading', 'util.httpInterceptor',
+                'uvm.service.alert', 'uv.service.tip', 'uv.fixed',
+                'angular-loading-bar', 'uv.service.dialog', 'uv.directive.tree',
+                'app.directive', 'app.router', 'app.resource',
+                'main', 'project', 'fileType', 'file', 'module'
+            ])
+            .config(function ($mdThemingProvider, $mdIconProvider, $urlRouterProvider,
+                              $mdDateLocaleProvider, $locationProvider, uvLoadingProvider, uvTreeProvider) {
+//                $locationProvider.html5Mode(true);
+                uvLoadingProvider.setLoadingGif("assets/diy/uv-loading/loading.gif");
+                uvTreeProvider.setImgFolder('assets/diy/uv-tree/img');
+                $urlRouterProvider.otherwise('/main/project/list');
+
+                /**
+                 * 设置日期显示控件
+                 */
+                // Example of a French localization.
+                $mdDateLocaleProvider.months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+//                $mdDateLocaleProvider.shortMonths = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
+                $mdDateLocaleProvider.shortMonths = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一', '十二'];
+
+                $mdDateLocaleProvider.days = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'];
+                $mdDateLocaleProvider.shortDays = ['日', '一', '二', '三', '四', '五', '六'];
+                // Can change week display to start on Monday.
+                $mdDateLocaleProvider.firstDayOfWeek = 0;
+                // Optional.
+                $mdDateLocaleProvider.dates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31];
+                $mdDateLocaleProvider.monthHeaderFormatter = function (date) {
+                    return date.getFullYear() + " " + $mdDateLocaleProvider.shortMonths[date.getMonth()];
+                };
+                //设置图标
+                var svgIcons = [
+                    "delete", "circle-person", 'cogwheel', 'draw', 'eye', 'symbol', 'load', 'lock', 'open',
+                    'load2', 'user', 'user-account-box', 'user-outline', 'arrow', 'arrows', 'arrow-left', 'arrow-right',
+                    'person', 'query', 'pkg-download', 'source-download',
+                    'card', 'card-person', 'iphone', 'phone', 'close', 'wireless', 'right', 'round-add', 'round-remove',
+                    'expand-down', 'expand-up', 'expand-left', 'expand-right', 'shopping-cart', 'plus', 'p', 'exit-right',
+                ];
+
+                for (var i = 0; i < svgIcons.length; i++) {
+                    $mdIconProvider.icon(svgIcons[i], "assets/svg/" + svgIcons[i] + ".svg", 10);
+                }
+
+                //sr-bank调色板
+                $mdThemingProvider.definePalette('srBlue', {
+                    '50': '04508d',
+                    '100': 'b4dFFF',
+                    '200': '80d8ff',
+                    '300': '04508d',
+                    '400': '04508d',
+                    '500': '04508d',
+                    '600': '04508d',
+                    '700': '04508d',
+                    '800': '04508d',
+                    '900': '01579b',
+                    'A100': '29b6f6',
+                    'A200': '04508d',
+                    'A400': '04508d',
+                    'A700': '04508d',
+                    'contrastDefaultColor': 'light'
+                });
+                $mdThemingProvider.definePalette('srGrey', {
+                    '50': 'eee',
+                    '100': 'eee',
+                    '200': 'eee',
+                    '300': 'eee',
+                    '400': 'eee',
+                    '500': 'eee',
+                    '600': 'eee',
+                    '700': 'eee',
+                    '800': 'eee',
+                    '900': 'eee',
+                    'A100': 'eee',
+                    'A200': 'eee',
+                    'A400': 'eee',
+                    'A700': 'eee',
+                    'contrastDefaultColor': 'dark'
+                });
+                $mdThemingProvider.theme('default')
+                        .primaryPalette('srBlue')
+                        .accentPalette('srGrey')
+                        //                        .accentPalette('blue', {
+                        //                            default: '400',
+                        //                            'hue-1': '100',
+                        //                            'hue-2': '600',
+                        //                            'hue-3': '900'
+                        //                        })
+                        .warnPalette('red')
+                        .backgroundPalette('grey');
+                //黑色调色板
+                $mdThemingProvider.definePalette('dark', {
+                    '50': '050505',
+                    '100': '111111',
+                    '200': '222222',
+                    '300': '333333',
+                    '400': '444444',
+                    '500': '555555',
+                    '600': '666666',
+                    '700': '777777',
+                    '800': '888888',
+                    '900': '999999',
+                    'A100': 'aaaaaa',
+                    'A200': 'bbbbbb',
+                    'A400': 'cccccc',
+                    'A700': 'eeeeee',
+                    // whether, by default, text (contrast)
+                    // on this palette should be dark or light
+                    'contrastDefaultColor': 'light'
+                });
+
+                $mdThemingProvider.theme('darkTheme').primaryPalette("dark", {
+                    'default': '300',
+                    'hue-1': '200', 'hue-2': '700', 'hue-3': 'A400'
+                })
+                        .accentPalette('srBlue')
+                        .warnPalette('red')
+                        .backgroundPalette("grey").dark(false)
+                ;
+
+                $mdThemingProvider.theme("darkTheme2")
+                        .primaryPalette("yellow")
+                        .accentPalette("srBlue")
+                        .warnPalette("srGrey")
+                        .dark();
+
+                $mdThemingProvider.theme('theme2')
+                        .primaryPalette('orange')
+                        .accentPalette('green')
+                        .warnPalette('red');
+
+            })
+            .run(['$rootScope', '$state', 'uvLoading', function ($rootScope, $state, uvLoading) {
+
+                $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+                    uvLoading.loading();
+                });
+
+                $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+                    $rootScope.currentStateName = toState.name;
+                    $rootScope.currentStateParams = toParams;
+                    uvLoading.unloading();
+                });
+
+
+            }])
+            .controller('index-ctrl', function ($scope, $http) {
+                $scope.getUser = function () {
+                    $http.post('user/list', {name: 'litx'}).then(function (res) {
+                        $scope.res = res;
+                    })
+                }
+            })
+    ;
+
+
+</script>
+</html>

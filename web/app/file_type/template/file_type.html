@@ -1,0 +1,102 @@
+<md-subheader>
+    <md-card style="margin:-16px;">
+        <md-content>
+            <md-button class="md-button md-primary" ng-click="defFileType($event)">
+                <md-icon md-svg-icon="plus" class="md-mini" style="margin-top: -3px;"></md-icon>
+                添加文件类型
+            </md-button>
+        </md-content>
+    </md-card>
+</md-subheader>
+
+<md-content>
+    <table class="table table-condensed table-striped table-hover">
+        <thead>
+        <th>文件类型名称</th>
+        <th>文件类型目录</th>
+        <th>项目文件数量</th>
+        <!--<th>文件类型描述</th>-->
+        <th>创建时间</th>
+        <th>创建人</th>
+        <th>
+            <md-icon md-font-icon="cogwheel"></md-icon>
+        </th>
+
+        </thead>
+        <tr ng-repeat="ft in file_types">
+            <td>{{ft.ft_name}}</td>
+            <td>{{ft.ft_folder}}</td>
+            <td>{{ft.count}}</td>
+            <!--<td>-->
+            <!--<p class="font-nowrap" style="width:100px;">{{ft.ft_desc}}</p>-->
+            <!--<md-tooltip md-delay="1000" md-direction="top">{{ft.ft_desc}}</md-tooltip>-->
+            <!--</td>-->
+            <td>{{ft.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>{{ft.login_no}}-{{ft.login_name}}</td>
+            <td>
+                <a href="">
+                    <md-icon md-svg-icon="draw" class="md-icon"
+                             style="cursor: pointer;height: 14px;width:14px;min-height: 14px;min-width: 14px;"
+                             ng-click="defFileType($event,ft)"></md-icon>
+                </a>
+            </td>
+        </tr>
+        <tr ng-show="!file_types|| file_types.length ==0">
+            <td colspan="6">无文件类型,点我
+                <a href="" ng-click="defFileType($event)">添加</a>
+            </td>
+        </tr>
+    </table>
+</md-content>
+
+<script type="text/ng-template" id="file_type_def_template">
+    <md-dialog aria-label="file_type" ng-cloak>
+        <form name="fileTypeForm">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2 style="margin-left: 10px;">项目 [{{project.project_name}}] 文件类型添加</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content" layout="column">
+                    <md-input-container>
+                        <label>文件类型名称</label>
+                        <input type="text" required name="ft_name" ng-model="ft.ft_name" flex>
+                        <div ng-messages="fileTypeForm.ft_name.$error" ng-show="fileTypeForm.ft_name.$dirty">
+                            <div ng-message="required">请输入文件类型名称</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>文件类型归属目录</label>
+                        <input type="text" required name="ft_folder" ng-model="ft.ft_folder" flex
+                               ng-blur="folderChange(ft.ft_folder)">
+                        <div ng-messages="fileTypeForm.ft_folder.$error" ng-show="fileTypeForm.ft_folder.$dirty">
+                            <div ng-message="required">请输入文件类型归属目录</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container>
+                        <label>文件类型描述</label>
+                        <textarea required name="ft_desc" ng-model="ft.ft_desc" cols="80" rows="3"
+                                  minlength="6"></textarea>
+                        <div ng-messages="fileTypeForm.ft_desc.$error" ng-show="fileTypeForm.ft_desc.$dirty">
+                            <div ng-message="required">请输入文件类型描述</div>
+                            <div ng-message="minlength">最短6位</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="cancel()" aria-label="cancel">
+                    取消
+                </md-button>
+                <md-button ng-click="confirm()" ng-disabled="fileTypeForm.$invalid" style="margin-right:20px;"
+                           aria-label="confirm" class="md-raised md-primary">
+                    确定
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>

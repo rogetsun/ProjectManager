@@ -1,0 +1,44 @@
+<div layout="row" flex>
+    <md-sidenav md-is-locked-open="true" md-whiteframe="2" md-component-id="left_menu_sidenav"
+                ng-style="{width:'222px',minWidth:'222px',maxWidth:'222px'}">
+        <md-list>
+            <md-list-item>
+                <md-button flex class="md-primary" ui-sref="project.detail({project_id:project.project_id})"
+                           style="margin-top: 0;" aria-label="project">
+                    {{project.project_name}}
+                </md-button>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-list-item ng-repeat="l in currentStateTop.children"
+                          ng-show="!l.no_show_init || (currentStateLeft.state == l.state)">
+                <md-button flex class="" ng-class="currentStateLeft.state == l.state?'md-raised md-primary':''"
+                           aria-label="{{l.name}}" ng-click="goState(l)">
+                    {{l.name}}
+                </md-button>
+            </md-list-item>
+        </md-list>
+    </md-sidenav>
+    <md-content flex layout="column" layout-align="start stretch">
+        <md-subheader>
+            <div layout="row" layout-align="start center">
+                {{currentStateLeft.name || project.project_name}}
+                <span flex></span>
+                <md-icon md-svg-icon="load"
+                         style="cursor: pointer;outline: none;"
+                         ng-click="reloadState()">
+                </md-icon>
+            </div>
+        </md-subheader>
+        <md-divider></md-divider>
+        <div layout="column" ui-view>
+            <md-content class="md-padding">
+                <p>创建时间：{{project.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</p>
+                <p>创建人员：{{project.login_no}}-{{project.login_name}}</p>
+                <p>项目描述：{{project.project_desc}}</p>
+            </md-content>
+            <md-card md-theme="default">
+            </md-card>
+        </div>
+
+    </md-content>
+</div>

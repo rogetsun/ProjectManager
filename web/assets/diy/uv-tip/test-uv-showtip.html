@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../../../assets/bootstrap/css/bootstrap.css"/>
+</head>
+<body ng-app="app" ng-controller="ctrl">
+<input type="text" ng-model="msg"/>
+<hr/>
+<button class="btn btn-primary" ng-click="show()">show</button>
+<button class="btn btn-danger" ng-click="hide()">hide</button>
+
+</body>
+<script src="../../../assets/jquery/jquery-1.11.2.min.js"></script>
+<script src="../../../assets/angular/angular.js"></script>
+<script src="uv-tip.js"></script>
+<script>
+    angular.module('app', ['uv.service.tip'])
+            .controller('ctrl', ['$scope', 'uvTip', function ($scope, uvTip) {
+                $scope.show = function () {
+                    uvTip.showTip($scope.msg, 2000).then(function () {
+                        console.log('over');
+                    });
+                };
+                $scope.hide = function () {
+                    uvTip.hideTip();
+                }
+            }]);
+</script>
+</html>

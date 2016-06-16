@@ -1,0 +1,106 @@
+<div md-theme="default">
+    <md-toolbar class="md-whiteframe-2dp" style="z-index: 99;">
+        <!--<md-toolbar class="md-whiteframe-2dp" style="background: #f0f0f0;">-->
+        <div class="md-toolbar-tools " layout="row" layout-align="center center">
+            <!--<img src="static/assets/img/sr-line-white.png" alt="" style="height: 40px;margin:0;">-->
+            <md-icon md-svg-icon="p"></md-icon>
+            <h2>
+                <span style="padding-left: 15px;font-size: 24px;white-space: nowrap;">项目管理系统</span>
+            </h2>
+            <span flex></span>
+            <md-button class="md-button" aria-label="{{m.name}}"
+                       ng-show="currentStateTop.state == m.state || !m.no_show_init"
+                       ng-click="goState(m)" ng-class="currentStateTop.state == m.state?'md-raised md-accent':''"
+                       ng-repeat="m in tree.children">
+                {{m.name}}
+            </md-button>
+            <div style="position: relative;overflow: visible;height: 40px;width: 40px;margin-left: 20px;" layout="row"
+                 layout-align="center start" md-theme="default">
+                <md-fab-speed-dial md-direction="down" class="md-fling" md-open="fb.isOpen"
+                                   style="z-index: 99999999999;">
+                    <md-fab-trigger>
+                        <md-button aria-label="用户" class="md-fab md-primary md-mini">
+                            <md-tooltip md-direction="down" md-delay="2000">
+                                {{currentLoginUser.login_name}}
+                            </md-tooltip>
+                            <md-icon md-svg-icon="user"></md-icon>
+                        </md-button>
+                    </md-fab-trigger>
+                    <md-fab-actions>
+                        <md-button aria-label="修改密码" class="md-fab md-raised md-primary md-mini"
+                                   ng-click="modifyPassword($event)" style="z-index: 99999999999;">
+                            <md-tooltip md-direction="left">修改密码</md-tooltip>
+                            <md-icon md-svg-icon="open"></md-icon>
+                        </md-button>
+                        <md-button aria-label="退出登录" class="md-fab md-raised md-warn md-mini"
+                                   style="z-index: 99999999999;" ng-click="logout()">
+                            <md-tooltip md-direction="left">退出系统</md-tooltip>
+                            <md-icon md-svg-icon="exit-right"></md-icon>
+                        </md-button>
+                    </md-fab-actions>
+                </md-fab-speed-dial>
+            </div>
+
+        </div>
+    </md-toolbar>
+</div>
+<div layout="row" flex ui-view style="background-color: #f5e79e;">
+
+</div>
+
+<script type="text/ng-template" id="modify_password_template.html">
+    <md-dialog aria-label="Mango (Fruit)" ng-cloak>
+        <form name="pwdForm">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <md-icon md-svg-icon="person"></md-icon>
+
+                    <h2 style="margin-left: 20px;">用户密码修改</h2>
+                    <span flex></span>
+                </div>
+            </md-toolbar>
+            <md-dialog-content>
+                <div class="md-dialog-content">
+                    <md-input-container>
+                        <label>当前密码</label>
+                        <input type="password" required name="curr_password" md5-diff="{{currentUser.login_password}}"
+                               ng-model="curr_password">
+                        <div ng-messages="pwdForm.curr_password.$error" ng-show="pwdForm.curr_password.$dirty">
+                            <div ng-message="required">请输入当前密码</div>
+                            <div ng-message="md5Diff">当前密码错误</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>新密码</label>
+                        <input type="password" required name="new_password_re" ng-model="new_password_re"
+                               minlength="6">
+                        <div ng-messages="pwdForm.new_password_re.$error" ng-show="pwdForm.new_password_re.$dirty">
+                            <div ng-message="required">请输入新密码</div>
+                            <div ng-message="minlength">密码最短6位</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>确定新密码</label>
+                        <input type="password" required name="new_password" ng-model="new_password"
+                               pwd-repeat="{{new_password_re}}">
+                        <div ng-messages="pwdForm.new_password.$error" ng-show="pwdForm.new_password.$dirty">
+                            <div ng-message="pwdRepeat">两次输入新密码不一致</div>
+                            <div ng-message="required">请再次输入新密码</div>
+                        </div>
+                    </md-input-container>
+
+                </div>
+            </md-dialog-content>
+            <md-dialog-actions layout="row">
+                <span flex></span>
+                <md-button ng-click="cancel()" aria-label="cancel">
+                    取消
+                </md-button>
+                <md-button ng-click="confirm()" ng-disabled="pwdForm.$invalid" style="margin-right:20px;"
+                           aria-label="confirm" class="md-raised md-primary">
+                    确定
+                </md-button>
+            </md-dialog-actions>
+        </form>
+    </md-dialog>
+</script>
