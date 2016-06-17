@@ -56,7 +56,7 @@
             <md-input-container class="md-primary">
                 <label>密码</label>
                 <md-icon md-svg-src="assets/svg/lock.svg"></md-icon>
-                <input name="login_password" ng-model="user.login_password" required minlength="6" type="password"
+                <input name="login_password" ng-model="user.login_password" required minlength="3" type="password"
                        ng-keypress="$event.keyCode==13&&login()" ng-focus="this.select()" ng-click="this.select()">
                 <div ng-messages="loginForm.login_password.$error" ng-show="loginForm.login_password.$dirty">
                     <div ng-message="required">请输入密码</div>
