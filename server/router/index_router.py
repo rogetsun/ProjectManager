@@ -6,6 +6,7 @@ from server.log_config import logger
 from server.service import user_service
 from server import mk_res
 from server.server_config import user_cookie_key
+from server import server_config
 from .base_router import BaseHandler
 
 __author__ = 'uv2sun'
@@ -60,6 +61,11 @@ class UserListHandler(BaseHandler):
     @authenticated
     def post(self, *args, **kwargs):
         self.write(mk_res(data=self.current_user))
+
+
+class LogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_cookie(server_config.user_cookie_key)
 
 
 if __name__ == "__main__":
