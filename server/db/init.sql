@@ -179,6 +179,9 @@ START TRANSACTION;
 USE `pm`;
 INSERT INTO `pm`.`d_login` (`login_id`, `login_no`, `login_name`, `login_password`) VALUES (1, 'songyw', '宋有伟', '24beddfef1014a7fc5389f1db8a8686b');
 INSERT INTO `pm`.`d_login` (`login_id`, `login_no`, `login_name`, `login_password`) VALUES (2, 'litx', '李天星', '53cda6db609352e4aca84f6e9f2f1b86');
+INSERT INTO `pm`.`d_login` (`login_id`, `login_no`, `login_name`, `login_password`) VALUES (3, 'fanjb', '范加兵', md5(md5('fanjb')));
+INSERT INTO `pm`.`d_login` (`login_id`, `login_no`, `login_name`, `login_password`) VALUES (4, 'wangwei', '王伟', md5(md5('wangwei')));
+INSERT INTO `pm`.`d_login` (`login_id`, `login_no`, `login_name`, `login_password`) VALUES (5, 'wutao', '吴涛', md5(md5('wutao')));
 
 COMMIT;
 
