@@ -60,7 +60,7 @@
                        ng-keypress="$event.keyCode==13&&login()" ng-focus="this.select()" ng-click="this.select()">
                 <div ng-messages="loginForm.login_password.$error" ng-show="loginForm.login_password.$dirty">
                     <div ng-message="required">请输入密码</div>
-                    <div ng-message="minlength">最短6位</div>
+                    <div ng-message="minlength">最短3位</div>
                 </div>
             </md-input-container>
             <md-input-container>
