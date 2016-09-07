@@ -61,7 +61,7 @@ def select_func_files(func_id):
     r = db.getAll("""select a.ff_id, a.func_id,a.file_version as curr_version, b.*
         from pm.d_func_file a, pm.d_file_his b
         where a.file_id=b.file_id and a.file_version = b.version and a.func_id=%s
-        order by a.ft_id""", (func_id,))
+        order by b.ft_id""", (func_id,))
     db.dispose()
     return r
 
