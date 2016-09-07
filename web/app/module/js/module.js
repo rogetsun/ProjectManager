@@ -83,14 +83,21 @@ angular.module('module.controller', [])
                 $scope.defFunc = function (func) {
                     $scope.editFunc = angular.copy(func) || {};
                     if (!$scope.editFunc.ftFiles) {
+                        $scope.editFunc.ftFiles = {};
                         if ($scope.editFunc.func_id) {
                             funcService.getFuncFiles($scope.editFunc.func_id).then(function (res) {
-                                $scope.editFunc.ftFiles = res.data;
+                                angular.forEach(res.data, function (v) {
+                                    if (!$scope.editFunc.ftFiles[v.ft_id]) {
+                                        $scope.editFunc.ftFiles[v.ft_id] = [];
+                                    }
+                                    $scope.editFunc.ftFiles[v.ft_id].push(v);
+                                });
+
                                 angular.forEach($scope.ftIDs, function (v) {
                                     // console.log(v);
                                     // console.log($scope.editFunc.ftFiles['' + v]);
-                                    if (!$scope.editFunc.ftFiles['' + v]) {
-                                        $scope.editFunc.ftFiles['' + v] = [];
+                                    if (!$scope.editFunc.ftFiles[v]) {
+                                        $scope.editFunc.ftFiles[v] = [];
                                     }
                                 });
                             })
