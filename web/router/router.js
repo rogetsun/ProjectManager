@@ -35,9 +35,9 @@ angular.module('app.router', ['ui.router'])
                 template: '<ui-view></ui-view>'
             })
             .state('pd.ft', {
-                url: '/file_type',
+                url: '/file-type',
                 controller: 'fileTypeController',
-                templateUrl: 'app/file_type/template/file_type.html'
+                templateUrl: 'app/file-type/template/file-type.html'
             })
             .state('pd.files', {
                 url: '/files',
@@ -49,7 +49,11 @@ angular.module('app.router', ['ui.router'])
                 controller: 'moduleController',
                 templateUrl: 'app/module/template/module.html'
             })
-
+            .state('pd.mod-file-upd', {
+                url: '/mod-file-upd',
+                controller: 'moduleFileUpdateController',
+                templateUrl: 'app/mod-file-upd/template/mod-file-upd.html'
+            })
 
     }])
     .run(['$rootScope', '$state', function ($rootScope, $state) {
@@ -66,6 +70,7 @@ angular.module('app.router', ['ui.router'])
             , {id: 3, name: '项目文件类型', pid: 1, state: 'pd.ft', root_distance: 2}
             , {id: 4, name: '项目文件', pid: 1, state: 'pd.files', root_distance: 2}
             , {id: 5, name: '项目模块', pid: 1, state: 'pd.module', root_distance: 2}
+            , {id: 6, name: '项目模块文件更新', pid: 1, state: 'pd.mod-file-upd', root_distance: 2}
 
         ];
         var root = {name: 'root', id: 0, pid: -1, root_distance: 0};
