@@ -21,6 +21,7 @@ class FilesHandler(BaseHandler):
 class FileHandler(BaseHandler):
     @router
     def post(self, project_id):
+        """上传文件"""
         try:
             ft_id = self.get_argument('ft_id')
             folder = self.get_argument('folder')
