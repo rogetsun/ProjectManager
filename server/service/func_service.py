@@ -25,12 +25,12 @@ def get_all_func(project_id):
 
 
 def get_func_files(func_id):
-    files = func_dao.select_func_files(func_id)
-    ret = {}
-    for f in files:
-        if ret.get(f.get('ft_id')) is None:
-            ret[f.get('ft_id')] = []
-        ret.get(f.get('ft_id')).append(f)
-
-    return ret
-    # return func_dao.select_func_files(func_id)
+    # files = func_dao.select_func_files(func_id)
+    # ret = {}
+    # for f in files:
+    #     if ret.get(f.get('ft_id')) is None:
+    #         ret[f.get('ft_id')] = []
+    #     ret.get(f.get('ft_id')).append(f)
+    #
+    # return ret
+    return func_dao.select_func_files(func_id)
