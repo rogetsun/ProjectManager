@@ -13,14 +13,7 @@ angular.module('module.controller', [])
              * 初始化获取功能列表,项目所有文件信息
              */
             $timeout(function () {
-                $scope.funcList = [
-                    // {func_id: 0, par_func_id: -1, func_name: $scope.project.project_name}
-                    // , {func_id: 1, par_func_id: 0, func_name: '项目列表'}
-                    // , {func_id: 2, par_func_id: 0, func_name: '项目管理'}
-                    // , {func_id: 3, par_func_id: 2, func_name: '项目文件类型'}
-                    // , {func_id: 4, par_func_id: 2, func_name: '项目文件'}
-                    // , {func_id: 5, par_func_id: 2, func_name: '项目模块'}
-                ];
+                $scope.funcList = [];
                 funcService.getAllFuncs($stateParams.project_id).then(function (res) {
                     $scope.funcList = res.data;
                     $scope.funcJSON = {};
