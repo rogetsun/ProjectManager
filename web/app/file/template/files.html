@@ -39,11 +39,11 @@
         </th>
         <th>最新版本号</th>
         <th ng-click="orderFiles('create_time')" style="cursor:pointer;">
-            创建时间
+            更新时间
             <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
                      ng-show="orderKey=='create_time'"></md-icon>
         </th>
-        <th>创建人</th>
+        <th>更新人</th>
         </thead>
         <tr ng-repeat="f in files|uvIndexOf:'ft_id':selectedFTIDs|orderBy:orderKey:orderReverse">
             <td>{{ftJSON[f.ft_id].ft_name}}</td>
