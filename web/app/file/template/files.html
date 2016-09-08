@@ -1,7 +1,7 @@
 <md-subheader>
     <md-card style="margin:-16px;" class="transition">
-        <md-content layout="row" layout-align="start center">
-            <md-button class="md-button md-primary" ng-click="addFile($event)">
+        <md-content layout="row" layout-align="start center" style="min-height: 40px;">
+            <md-button class="md-button md-primary" ng-click="addFile($event)" ng-show="currentLoginUser.role_id==0">
                 <md-icon md-svg-icon="plus" class="md-mini" style="margin-top: -3px;"></md-icon>
                 添加
             </md-button>

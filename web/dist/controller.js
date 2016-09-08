@@ -500,6 +500,10 @@ angular.module('mfu.controller', ['ngFileUpload'])
              */
             {
                 $scope.treeName = 'defaultTree';
+                /**
+                 * 打开模块文件列表sidenav
+                 * @param func
+                 */
                 $scope.defFunc = function (func) {
                     $scope.editFunc = angular.copy(func) || {};
                     if (!$scope.editFunc.files) {
@@ -521,23 +525,34 @@ angular.module('mfu.controller', ['ngFileUpload'])
                 };
 
 
-                $scope.downloadFunc = function () {
-                    var selectedFuncs = uvTree.getTree($scope.treeName).getSelected();
-                    if (!selectedFuncs || selectedFuncs.length == 0) {
-                        uvTip.showTip('请用复选框选择要下载的模块!', 2000);
-                        return;
-                    }
-                    var fid = [];
-                    angular.forEach(selectedFuncs, function (v) {
-                        this.push(v.func_id);
-                    }, fid);
-                    window.open('func/dl?fid=' + fid.join(","))
-                };
-
+                /**
+                 * 下载当前模块
+                 */
                 $scope.downCurrFunc = function () {
                     window.open('func/dl?fid=' + $scope.editFunc.func_id)
                 };
 
+
+                /**
+                 * 查看文件历史版本信息
+                 * @param $event
+                 * @param f
+                 */
+                $scope.showFileHis = function ($event, f) {
+                    $mdDialog.show({
+                        templateUrl: 'file_his_template',
+                        targetEvent: $event,
+                        locals: {file: f, ftJSON: $scope.ftJSON},
+                        resolve: {
+                            files: ['fileService', function (fileService) {
+                                return fileService.getFileHis(f.file_id).then(function (res) {
+                                    return res.data;
+                                })
+                            }]
+                        },
+                        controller: 'fileHisController'
+                    })
+                };
             }
 
 

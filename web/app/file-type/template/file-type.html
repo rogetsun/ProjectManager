@@ -1,4 +1,4 @@
-<md-subheader>
+<md-subheader ng-show="currentLoginUser.role_id==0">
     <md-card style="margin:-16px;">
         <md-content>
             <md-button class="md-button md-primary" ng-click="defFileType($event)">
@@ -93,7 +93,7 @@
                     取消
                 </md-button>
                 <md-button ng-click="confirm()" ng-disabled="fileTypeForm.$invalid" style="margin-right:20px;"
-                           aria-label="confirm" class="md-raised md-primary">
+                           ng-show="currentLoginUser.role_id==0" aria-label="confirm" class="md-raised md-primary">
                     确定
                 </md-button>
             </md-dialog-actions>

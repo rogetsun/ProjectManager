@@ -7,10 +7,6 @@
                        ng-click="downloadFunc()">
                 <md-icon md-svg-icon="pkg-download" class="md-mini"></md-icon>
             </md-button>
-            <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_fun" style="margin:0;"
-                       ng-click="defFunc()">
-                <md-icon md-svg-icon="plus" class="md-mini"></md-icon>
-            </md-button>
         </md-card-header>
         <md-card-content>
             <div uv-tree="{{treeName}}" uv-tree-data="funcList" uv-tree-multi-select="true"
@@ -91,6 +87,7 @@
                         <span flex>文件</span>
                         <!--<th>文件最新版本</th>-->
                         <!--<th>模块使用版本</th>-->
+                        <span>使用版本</span>
                         <span flex="10">
                             <md-icon md-svg-icon="download" class="md-mini text-primary"
                                      style="cursor:pointer;" ng-click="downCurrFunc()">
@@ -122,6 +119,12 @@
                                 <span flex>
                                     {{(ftJSON[f.ft_id].ft_folder=="/"?"":ftJSON[f.ft_id].ft_folder)+f.file_path_name}}
                                     <!--{{f|json}}-->
+                                </span>
+                                <span flex="5">
+                                    <button class="btn btn-xs btn-default" style="width:30px;"
+                                            ng-click="showFileHis($event,f)">
+                                        {{f.curr_version}}
+                                    </button>
                                 </span>
                                 <span flex="10">
                                     <md-icon md-svg-icon="download" class="md-mini text-primary"
@@ -159,3 +162,43 @@
         </md-content>
     </md-card>
 </md-sidenav>
+
+
+<script type="text/ng-template" id="file_his_template">
+    <md-dialog style="min-width: 800px;">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 style="margin-left: 10px;">[{{file.file_path_name}}]文件历史版本</h2>
+                <span flex></span>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <table class="table table-condensed table-striped">
+                <thead>
+                <th>#</th>
+                <th>文件类型</th>
+                <th>文件</th>
+                <th>版本</th>
+                <th>创建时间</th>
+                <th>创建人</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="f in files">
+                    <td>{{f.file_id}}</td>
+                    <td>{{ftJSON[f.ft_id].ft_name}}</td>
+                    <td>{{f.file_path_name}}</td>
+                    <td><span class="btn btn-xs btn-default" disabled>{{f.version}}</span></td>
+                    <td>{{f.create_time|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                    <td>{{f.login_no}}-{{f.login_name}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <span flex></span>
+            <md-button ng-click="cancel()" aria-label="cancel" style="margin-right:20px;">
+                关闭
+            </md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</script>
