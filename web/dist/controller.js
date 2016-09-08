@@ -556,7 +556,8 @@ angular.module('mfu.controller', ['ngFileUpload'])
                             if (
                                 sfPath == (file.path || file.name) ||
                                 (sfPath.indexOf(file.path || file.name) > -1 && sfPath.split(file.path || file.name)[1].length == 0)
-                            ) {
+                            )//文件匹配
+                            {
                                 sfs[i].isUpdate = 1; //undefined or 0:未更新, 1:有更新且未上传, 2:更新上传完毕
                                 sfs[i].file = file;
                                 sfs[i].uploadFlag = 0;//undefined or 0:未开始上传, 1:uploading, 2:upload ok, 3:upload error
@@ -594,7 +595,9 @@ angular.module('mfu.controller', ['ngFileUpload'])
                  * @param file editFunc.files[i] 数组中的某一个
                  */
                 $scope.uploadFile = function (func_id, file) {
+                    console.log("uploadFile," + arguments[2]);
                     file.uploadFlag = 1; //undefined or 0:未开始上传, 1:uploading, 2:upload ok, 3:upload error
+                    $scope.uploadingFilesID.push(file.ff_id);
                     Upload.upload({
                         url: 'project/' + $scope.project.project_id + '/func/' + func_id + '/upd-file/' + file.ff_id,
                         data: {file: file.file, file_id: file.file_id}
@@ -636,17 +639,16 @@ angular.module('mfu.controller', ['ngFileUpload'])
                     var toUp = function () {
                         if (idx < $scope.editFunc.files.length) {
                             if ($scope.uploadingFilesID.length >= $scope.uploadingCount) {
-                                console.log("wait 200");
                                 setTimeout(toUp, 200);
                                 return;
                             }
                             for (var i = idx; i < $scope.editFunc.files.length; i++) {
                                 var tmpFile = $scope.editFunc.files[i];
-                                if (tmpFile.isUpdate == 1 || (tmpFile.isUpdate == 2 && tmpFile.uploadFlag == 3)) {
+                                if ((tmpFile.isUpdate == 1 && tmpFile.uploadFlag != 1)
+                                    || (tmpFile.isUpdate == 2 && tmpFile.uploadFlag == 3)) {
                                     idx = i + 1;
-                                    $scope.uploadingFilesID.push(tmpFile.ff_id);
                                     console.log("upload " + tmpFile.file_path_name);
-                                    $scope.uploadFile($scope.editFunc.func_id, tmpFile);
+                                    $scope.uploadFile($scope.editFunc.func_id, tmpFile, 'from all');
                                     toUp();
                                     break;
                                 }

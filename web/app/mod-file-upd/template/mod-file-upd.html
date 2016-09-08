@@ -96,9 +96,11 @@
                                      style="cursor:pointer;" ng-click="downCurrFunc()">
                                 <md-tooltip md-delay="1000">下载全部文件</md-tooltip>
                             </md-icon>
-                            <md-icon md-svg-icon="upload" class="md-mini text-success" style="cursor:pointer;"
+                            <md-icon md-svg-icon="upload" class="md-mini"
+                                     ng-class="uploadingFilesID.length==0?'text-success':'text-default'"
+                                     style="cursor:pointer;"
                                      ng-show="(editFunc.files|filter:{isUpdate:1}).length > 0 "
-                                     ng-click="uploadAllFiles()">
+                                     ng-click="uploadingFilesID.length == 0 && uploadAllFiles()">
                                 <md-tooltip md-delay="1000">上传全部文件</md-tooltip>
                             </md-icon>
                             <md-icon md-svg-icon="round-remove" class="md-mini text-danger" style="cursor:pointer;"

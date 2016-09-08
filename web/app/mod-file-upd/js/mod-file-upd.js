@@ -177,7 +177,9 @@ angular.module('mfu.controller', ['ngFileUpload'])
                  * @param file editFunc.files[i] 数组中的某一个
                  */
                 $scope.uploadFile = function (func_id, file) {
+                    console.log("uploadFile," + arguments[2]);
                     file.uploadFlag = 1; //undefined or 0:未开始上传, 1:uploading, 2:upload ok, 3:upload error
+                    $scope.uploadingFilesID.push(file.ff_id);
                     Upload.upload({
                         url: 'project/' + $scope.project.project_id + '/func/' + func_id + '/upd-file/' + file.ff_id,
                         data: {file: file.file, file_id: file.file_id}
@@ -219,7 +221,6 @@ angular.module('mfu.controller', ['ngFileUpload'])
                     var toUp = function () {
                         if (idx < $scope.editFunc.files.length) {
                             if ($scope.uploadingFilesID.length >= $scope.uploadingCount) {
-                                console.log("wait 200");
                                 setTimeout(toUp, 200);
                                 return;
                             }
@@ -228,9 +229,8 @@ angular.module('mfu.controller', ['ngFileUpload'])
                                 if ((tmpFile.isUpdate == 1 && tmpFile.uploadFlag != 1)
                                     || (tmpFile.isUpdate == 2 && tmpFile.uploadFlag == 3)) {
                                     idx = i + 1;
-                                    $scope.uploadingFilesID.push(tmpFile.ff_id);
                                     console.log("upload " + tmpFile.file_path_name);
-                                    $scope.uploadFile($scope.editFunc.func_id, tmpFile);
+                                    $scope.uploadFile($scope.editFunc.func_id, tmpFile, 'from all');
                                     toUp();
                                     break;
                                 }
