@@ -4,5 +4,5 @@ DBHOST = "localhost"
 DBPORT = 3306
 DBUSER = "program_user"
 DBPWD = "program_user"
-DBNAME = "credit"
+DBNAME = "pm"
 DBCHAR = "utf8"
