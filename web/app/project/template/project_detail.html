@@ -10,6 +10,7 @@
             </md-list-item>
             <md-divider></md-divider>
             <md-list-item ng-repeat="l in currentStateTop.children"
+                          ng-if="!l.admin || (l.admin==1 && currentLoginUser.role_id == 0)"
                           ng-show="!l.no_show_init || (currentStateLeft.state == l.state)">
                 <md-button flex class="" ng-class="currentStateLeft.state == l.state?'md-raised md-primary':''"
                            aria-label="{{l.name}}" ng-click="goState(l)">
