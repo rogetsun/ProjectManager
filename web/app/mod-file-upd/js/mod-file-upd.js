@@ -106,6 +106,21 @@ angular.module('mfu.controller', ['ngFileUpload'])
                     delete $scope.editFunc;
                 };
 
+                /**
+                 * 下载功能树上选中的模块
+                 */
+                $scope.downloadFunc = function () {
+                    var selectedFuncs = uvTree.getTree($scope.treeName).getSelected();
+                    if (!selectedFuncs || selectedFuncs.length == 0) {
+                        uvTip.showTip('请用复选框选择要下载的模块!', 2000);
+                        return;
+                    }
+                    var fid = [];
+                    angular.forEach(selectedFuncs, function (v) {
+                        this.push(v.func_id);
+                    }, fid);
+                    window.open('func/dl?fid=' + fid.join(","))
+                };
 
                 /**
                  * 下载当前模块
