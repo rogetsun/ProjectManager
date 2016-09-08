@@ -7,5 +7,9 @@ from server.log_config import logger
 
 logger.debug("tornado version:%s" % (tornado.version,))
 
-app.listen(8000)
+setting = {
+    "max_buffer_size": 2048000000  # 200MB
+}
+
+app.listen(8000, address="0.0.0.0", **setting)
 IOLoop.current().start()

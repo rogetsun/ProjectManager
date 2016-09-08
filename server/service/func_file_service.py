@@ -24,6 +24,8 @@ def update_file(opr, project_id, func_id, ff_id, file_id, file):
         logger.debug('project_file:%s' % (project_file,))
         file_util.save_file(project_file, file.body)
         db.dispose()
+        return f
     except Exception as e:
         logger.error(e.message)
         db.dispose(isEnd=0)
+        raise e

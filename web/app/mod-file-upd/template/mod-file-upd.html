@@ -1,0 +1,155 @@
+<md-content layout="row" layout-align="start start">
+    <md-card flex="50">
+        <md-card-header class="uv-card-header">
+            项目功能模块
+            <span flex="5"></span>
+            <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_fun" style="margin:0;"
+                       ng-click="downloadFunc()">
+                <md-icon md-svg-icon="pkg-download" class="md-mini"></md-icon>
+            </md-button>
+            <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_fun" style="margin:0;"
+                       ng-click="defFunc()">
+                <md-icon md-svg-icon="plus" class="md-mini"></md-icon>
+            </md-button>
+        </md-card-header>
+        <md-card-content>
+            <div uv-tree="{{treeName}}" uv-tree-data="funcList" uv-tree-multi-select="true"
+                 uv-tree-node-id-key="func_id"
+                 uv-tree-node-name-key="func_name" uv-tree-node-parent-id-key="par_func_id"
+                 uv-tree-node-selected-key="selected" uv-tree-select-node-func="defFunc()"></div>
+        </md-card-content>
+    </md-card>
+</md-content>
+
+<!--功能模块编辑sidenav-->
+<md-sidenav md-component-id="func_def_sidenav"
+            class="md-sidenav-right" style="min-width: 700px;"
+            layout-align="start stretch" layout="column">
+    <md-card layout-fill>
+        <md-card-header class="uv-card-header" layout="row" layout="start center">
+            <md-icon md-svg-icon="expand-right" class="md-mini" ng-click="exitFunc()"></md-icon>
+            <h5 flex layout="column" layout-align="center center">
+                {{editFunc.func_id?editFunc.func_name+'模块编辑':'新建模块'}}</h5>
+        </md-card-header>
+        <!--功能模块基本信息-->
+        <form name="funcForm">
+            <md-content md-theme="darkTheme2" layout="column" layout-align="start stretch"
+                        style="padding:16px 0 0;">
+                <div layout="row" layout-align="start start" style="height: 70px;overflow: hidden;">
+                    <md-input-container flex>
+                        <label>模块名称</label>
+                        <input type="text" ng-model="editFunc.func_name" name="func_name" disabled="disabled">
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>上级模块</label>
+                        <input type="text" name="par_func_name" ng-model="funcJSON[editFunc.par_func_id].func_name"
+                               disabled="disabled">
+                    </md-input-container>
+                    <md-input-container flex ng-show="editFunc.func_code">
+                        <label>模块编码</label>
+                        <input type="text" name="func_code" ng-model="editFunc.func_code" disabled="disabled">
+                    </md-input-container>
+                </div>
+                <div layout="row" layout-align="center center">
+                    <md-icon md-svg-icon="expand-down" class="md-mini" style="cursor:pointer;" ng-show="!showFuncQC"
+                             ng-click="showFuncQC = !showFuncQC"></md-icon>
+                </div>
+            </md-content>
+        </form>
+        <!--功能模块文件类型筛选-->
+        <md-content md-theme="darkTheme2" class="slide-down" ng-show="showFuncQC">
+            <div style="margin:0 16px;">
+                <md-checkbox ng-click="toggleAll()" ng-checked="isChecked()"
+                             md-indeterminate="isIndeterminate()"
+                             class="md-accent">
+                    {{isChecked()?"取消":""}}全选
+                </md-checkbox>
+            </div>
+            <div layout="row" style="flex-wrap: wrap;margin:0 16px;" layout-align="start start">
+                <md-checkbox ng-repeat="ft in file_types" ng-checked="isExists(ft.ft_id)" class="md-primary"
+                             ng-click="toggle(ft.ft_id)">
+                    {{ft.ft_name}}({{ft.count}})
+                </md-checkbox>
+            </div>
+            <div layout="row" layout-align="center center">
+                <md-icon md-svg-icon="expand-up" class="md-mini" style="cursor:pointer;"
+                         ng-click="showFuncQC = !showFuncQC"></md-icon>
+            </div>
+        </md-content>
+        <!--功能模块中,不同文件类型输入选择文件部分-->
+        <md-content flex ngf-drop="updateFile($files)" ngf-multiple="true">
+            <md-card style="margin:3px;">
+                <md-card-header class="uv-card-header">
+                    模块文件列表&nbsp;&nbsp;
+                    <i style="color:#999;font-size: 12px;">(将要更新文件拖入模块文件列表)</i>
+                </md-card-header>
+                <table class="table table-condensed table-striped">
+                    <thead>
+                    <!--<th>文件类型</th>-->
+                    <!--<th>文件类型目录</th>-->
+                    <th layout="row">
+                        <span flex>文件</span>
+                        <!--<th>文件最新版本</th>-->
+                        <!--<th>模块使用版本</th>-->
+                        <span flex="10">
+                            <md-icon md-svg-icon="download" class="md-mini text-default"
+                                     style="cursor:pointer;" ng-click="downCurrFunc()">
+                                <md-tooltip md-delay="1000">下载全部文件</md-tooltip>
+                            </md-icon>
+                            <md-icon md-svg-icon="upload" class="md-mini text-success" style="cursor:pointer;"
+                                     ng-show="(editFunc.files|filter:{isUpdate:1}).length > 0">
+                                <md-tooltip md-delay="1000">上传全部文件</md-tooltip>
+                            </md-icon>
+                            <md-icon md-svg-icon="round-remove" class="md-mini text-danger" style="cursor:pointer;"
+                                     ng-show="(editFunc.files|filter:{isUpdate:1}).length > 0"
+                                     ng-click="cancelAllUpload()">
+                                <md-tooltip md-delay="1000">取消全部上传</md-tooltip>
+                            </md-icon>
+                        </span>
+                    </th>
+                    </thead>
+                    <tbody>
+                    <tr ng-show="!editFunc.files || (editFunc.files|uvIndexOf:'ft_id':selectedFTIDs).length==0">
+                        <td>无</td>
+                    </tr>
+                    <tr ng-repeat="f in editFunc.files|uvIndexOf:'ft_id':selectedFTIDs|orderBy:'isUpdate'"
+                        ng-class="f.isUpdate?'success':''">
+                        <td layout="column">
+                            <div layout="row">
+                                <span flex>
+                                    {{(ftJSON[f.ft_id].ft_folder=="/"?"":ftJSON[f.ft_id].ft_folder)+f.file_path_name}}
+                                    <!--{{f|json}}-->
+                                </span>
+                                <span flex="10">
+                                    <md-icon md-svg-icon="download" class="md-mini text-default"
+                                             style="cursor:pointer;">
+                                        <md-tooltip md-delay="1000">下载文件</md-tooltip>
+                                    </md-icon>
+                                    <md-icon md-svg-icon="upload" class="md-mini text-success" style="cursor:pointer;"
+                                             ng-show="f.isUpdate" ng-click="uploadFile(editFunc.func_id, f)">
+                                        <md-tooltip md-delay="1000">上传文件</md-tooltip>
+                                    </md-icon>
+                                    <md-icon md-svg-icon="round-remove" class="md-mini text-danger"
+                                             style="cursor:pointer;"
+                                             ng-show="f.isUpdate" ng-click="cancelSingleUpload(f)">
+                                        <md-tooltip md-delay="1000">取消上传</md-tooltip>
+                                    </md-icon>
+                                </span>
+                            </div>
+                            <md-progress-linear md-mode="determinate" value="{{f.percentage}}"
+                                                style="height:2px;overflow: hidden;"
+                                                ng-show="f.uploadFlag==1"
+                            >
+                            </md-progress-linear>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-card>
+        </md-content>
+        <md-content layout="row" layout-align="center center">
+            <!--<md-button class="md-primary md-raised" ng-click="saveFunc()" ng-disabled="funcForm.$invalid">保存</md-button>-->
+            <md-button class="" ng-click="exitFunc()">关闭</md-button>
+        </md-content>
+    </md-card>
+</md-sidenav>

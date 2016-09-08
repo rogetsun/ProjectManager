@@ -5,6 +5,7 @@ import tornado
 from tornado.web import Application
 
 from server import server_config
+from server.log_config import logger
 from server.router import handlers
 
 staticHandlers = [
@@ -19,8 +20,10 @@ setting = dict(
     template_path=os.path.dirname(__file__) + "/web",
     cookie_secret="0987654poiuytrewqlkjhgfdsamnbvcxzsongywSONGYWLITIANXINGlitianxing123abc,./<>?",
     login_url="/",
-    debug=server_config.debug
+    debug=server_config.debug,
+    # max_buffer_size="200MB",
+    # max_body_size="200MB",
 )
-print setting
+logger.debug(setting)
 
 app = Application(staticHandlers + handlers, **setting)

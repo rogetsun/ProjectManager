@@ -73,3 +73,9 @@ def select_funcs_files(func_ids):
                 and a.ft_id = c.ft_id and b.func_id in %s""", (func_ids,))
     db.dispose()
     return r
+
+
+def update_func_file_version(ff_id, version, db):
+    """更新模块使用文件版本号"""
+    r = db.update("""update pm.d_func_file set file_version=%s WHERE ff_id=%s""", param=(version, ff_id))
+    return r
