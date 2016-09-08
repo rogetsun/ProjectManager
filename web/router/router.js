@@ -69,9 +69,8 @@ angular.module('app.router', ['ui.router'])
             //二级项目管理内容
             , {id: 3, name: '项目文件类型', pid: 1, state: 'pd.ft', root_distance: 2}
             , {id: 4, name: '项目文件', pid: 1, state: 'pd.files', root_distance: 2}
-            , {id: 5, name: '项目模块', pid: 1, state: 'pd.module', root_distance: 2}
+            , {id: 5, name: '项目模块', pid: 1, state: 'pd.module', root_distance: 2, admin: 1}
             , {id: 6, name: '项目模块文件更新', pid: 1, state: 'pd.mod-file-upd', root_distance: 2}
-
         ];
         var root = {name: 'root', id: 0, pid: -1, root_distance: 0};
 
