@@ -13,6 +13,7 @@
         </md-card-content>
     </md-card>
     <md-card style="height: 200px;width: 250px;cursor: pointer;" ng-click="addProject($event)" layout="column"
+             ng-if="currentLoginUser.role_id == 0"
              layout-align="center center">
         <md-icon md-svg-icon="plus"
                  style="color:#ddd;margin:50px;"></md-icon>
