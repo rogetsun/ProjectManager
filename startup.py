@@ -8,7 +8,7 @@ from server.log_config import logger
 logger.debug("tornado version:%s" % (tornado.version,))
 
 setting = {
-    "max_buffer_size": 2048000000  # 200MB
+    "max_buffer_size": 204800000  # 200MB
 }
 
 app.listen(8000, address="0.0.0.0", **setting)

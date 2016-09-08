@@ -135,7 +135,11 @@ angular.module('mfu.controller', ['ngFileUpload'])
                             if (sfPath.substr(0, 2) == "//") {
                                 sfPath = sfPath.substr(1);
                             }
-                            if (sfPath.indexOf(file.path || file.name) > -1) {
+                            if (
+                                sfPath == (file.path || file.name) ||
+                                (sfPath.indexOf(file.path || file.name) > -1 && sfPath.split(file.path || file.name)[1].length == 0)
+                            )//文件匹配
+                            {
                                 sfs[i].isUpdate = 1; //undefined or 0:未更新, 1:有更新且未上传, 2:更新上传完毕
                                 sfs[i].file = file;
                                 sfs[i].uploadFlag = 0;//undefined or 0:未开始上传, 1:uploading, 2:upload ok, 3:upload error
@@ -166,12 +170,7 @@ angular.module('mfu.controller', ['ngFileUpload'])
                     });
                 };
 
-                /**
-                 * 正在上传中的file的ff_id
-                 * @type {Array}
-                 */
-                $scope.uploadingFilesID = [];
-                $scope.uploadingCount = 1;//上传文件并发个数
+
                 /**
                  * 上传单个文件
                  * @param func_id
@@ -186,35 +185,58 @@ angular.module('mfu.controller', ['ngFileUpload'])
                         var res = resp.data;
                         if (res && res.ret_code == 0) {
                             file.uploadFlag = 2; //undefined or 0:未开始上传, 1:uploading, 2:upload ok, 3:upload error
-                            file.isUpdate = 2;
                             file.curr_version = res.data.curr_version;
                             file.version = res.data.curr_version;
                         } else {
-                            uvDialog.show('上传失败,' + res.ret_msg);
+                            uvDialog.show('上传[' + file.file_path_name + ']失败,' + res.ret_msg);
                             file.uploadFlag = 3;
                         }
                     }, function (resp) {
                         console.log('Error status: ' + resp.status);
                         console.log(resp);
                         file.uploadFlag = 3; //undefined or 0:未开始上传, 1:uploading, 2:upload ok, 3:upload error
-                        file.isUpdate = 2;
-                        uvDialog.show('上传失败,' + resp);
+                        uvDialog.show('上传[' + file.file_path_name + ']失败,error status:' + resp.status);
                     }, function (evt) {
                         file.percentage = parseInt(100.0 * evt.loaded / evt.total);
-                        console.log(file.file_path_name + ":" + percentage);
                     })
                         .finally(function () {
+                            console.log('finally');
                             $scope.uploadingFilesID.splice($scope.uploadingFilesID.indexOf(file.ff_id), 1);
+                            file.isUpdate = 2;
                         });
                 };
-
+                /**
+                 * 正在上传中的file的ff_id
+                 * @type {Array}
+                 */
+                $scope.uploadingFilesID = [];
+                $scope.uploadingCount = 1;//上传文件并发个数
                 /**
                  * 上传所有更新文件
                  */
                 $scope.uploadAllFiles = function () {
-                    angular.forEach($filter("filter")($scope.editFunc.files, {isUpdate: true}), function (file) {
-                        $scope.uploadFile($scope.editFunc.func_id, file);
-                    });
+                    var idx = 0;
+                    var toUp = function () {
+                        if (idx < $scope.editFunc.files.length) {
+                            if ($scope.uploadingFilesID.length >= $scope.uploadingCount) {
+                                console.log("wait 200");
+                                setTimeout(toUp, 200);
+                                return;
+                            }
+                            for (var i = idx; i < $scope.editFunc.files.length; i++) {
+                                var tmpFile = $scope.editFunc.files[i];
+                                if (tmpFile.isUpdate == 1 || (tmpFile.isUpdate == 2 && tmpFile.uploadFlag == 3)) {
+                                    idx = i + 1;
+                                    $scope.uploadingFilesID.push(tmpFile.ff_id);
+                                    console.log("upload " + tmpFile.file_path_name);
+                                    $scope.uploadFile($scope.editFunc.func_id, tmpFile);
+                                    toUp();
+                                    break;
+                                }
+                            }
+                        }
+                    };
+                    toUp();
                 };
 
             }
