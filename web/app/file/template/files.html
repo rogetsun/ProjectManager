@@ -1,11 +1,23 @@
 <md-subheader>
     <md-card style="margin:-16px;" class="transition">
-        <md-content layout="row" layout-align="start center" style="min-height: 40px;">
+        <md-content layout="row" layout-align="start center" style="min-height: 40px;height:40px;">
             <md-button class="md-button md-primary" ng-click="addFile($event)" ng-show="currentLoginUser.role_id==0">
                 <md-icon md-svg-icon="plus" class="md-mini" style="margin-top: -3px;"></md-icon>
                 添加
             </md-button>
-            <span flex></span>
+            <span flex layout="row" style="padding-top: 15px;">
+                <md-input-container layout="row" flex="20"
+                                    style="height: 50px;min-height: 50px;margin:0 20px;overflow: hidden;">
+                    <label>ID搜索</label>
+                    <input type="text" ng-model="query.file_id" flex>
+                </md-input-container>
+                <md-input-container layout="row" flex
+                                    style="height: 50px;min-height: 50px;margin:0 20px;overflow: hidden;">
+                    <label>文件名搜索</label>
+                    <input type="text" ng-model="query.file_path_name" flex>
+                </md-input-container>
+
+            </span>
             <md-icon md-svg-icon="{{showQC?'expand-down':'expand-left'}}" class="md-icon md-mini"
                      style="cursor:pointer;margin-right: 10px;"
                      ng-click="showQC=!showQC"></md-icon>
@@ -31,6 +43,7 @@
 <md-content>
     <table class="table table-condensed table-striped table-hover">
         <thead>
+        <th>#</th>
         <th>文件类型</th>
         <th ng-click="orderFiles('file_path_name')" style="cursor:pointer;">
             文件
@@ -45,7 +58,8 @@
         </th>
         <th>更新人</th>
         </thead>
-        <tr ng-repeat="f in files|uvIndexOf:'ft_id':selectedFTIDs|orderBy:orderKey:orderReverse">
+        <tr ng-repeat="f in files|uvIndexOf:'ft_id':selectedFTIDs|filter:query|orderBy:orderKey:orderReverse">
+            <td>{{f.file_id}}</td>
             <td>{{ftJSON[f.ft_id].ft_name}}</td>
             <td>{{f.file_path_name}}</td>
             <td>

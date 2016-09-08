@@ -14,6 +14,7 @@ staticHandlers = [
     , ("/assets/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/assets"})
     , ("/dist/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/dist"})
     , ("/dl/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/download"})
+    , ("/dlf/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/server/files"})
 ]
 
 setting = dict(

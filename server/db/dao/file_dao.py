@@ -76,3 +76,10 @@ def update_file_version(file_id, opr, db=Mysql()):
     f = db.getOne("""select * from pm.d_file where file_id=%s""", (file_id,))
     logger.debug("更新文件%s完成,新版本号:%s" % (f.get('file_path_name'), f.get("curr_version")))
     return f
+
+
+def get_file_by_id_version(file_id, version):
+    db = Mysql()
+    f = db.getOne("select * from pm.d_file_his WHERE file_id=%s and version=%s", (file_id, version))
+    db.dispose()
+    return f

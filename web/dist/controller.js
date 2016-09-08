@@ -553,6 +553,15 @@ angular.module('mfu.controller', ['ngFileUpload'])
                         controller: 'fileHisController'
                     })
                 };
+
+                /**
+                 * 下载指定文件指定版本
+                 * @param file_id
+                 * @param version
+                 */
+                $scope.fileDownload = function (file_id, version) {
+                    window.open("file/dl/" + file_id + "/" + version);
+                }
             }
 
 

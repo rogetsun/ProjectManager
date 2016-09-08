@@ -5,7 +5,7 @@ from .func_router import FuncHandler, FuncsHandler, FuncDownloadHandler
 from .file_type_router import FileTypeHandler
 from .index_router import IndexHandler, LoginHandler, UserHandler, UserListHandler, LogoutHandler
 from .project_router import ProjectHandler, ProjectsHandler
-from .file_router import FilesHandler, FileHandler, FileHisHandler
+from .file_router import FilesHandler, FileHandler, FileHisHandler, FileDownHandler
 
 __author__ = 'uv2sun'
 
@@ -25,6 +25,7 @@ handlers = [
     , ('/project/(\d+)/file', FileHandler)
     , ('/project/(\d+)/ft/(\d+)/file/(\S+)', FileHandler)
     , ('/file/(\d+)/his', FileHisHandler)
+    , ('/file/dl/(\d+)/(\d+)', FileDownHandler)
     # file_type
     , ('/project/(\d+)/file_type', FileTypeHandler)
     # func

@@ -79,7 +79,9 @@ class FuncDownloadHandler(BaseHandler):
                     server_config.project_file_folder, f.get('project_id'), f.get('file_id'), f.get('file_version'),
                     ext)
                 logger.debug('real_file:%s' % (real_file,))
-                zip_file = '%s%s' % (f.get('ft_folder'), str(f.get('file_path_name')))
+                zip_file = '%s%s' % (
+                    f.get('ft_folder') == "/" and "" or f.get('ft_folder'), str(f.get('file_path_name'))
+                )
                 logger.debug('zip_file:%s' % (zip_file,))
                 zip_pkg.write(filename=real_file, arcname=zip_file)
             zip_pkg.close()

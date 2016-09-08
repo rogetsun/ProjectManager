@@ -23,7 +23,7 @@ def router(func):
         try:
             return authenticated(func)(self, *args, **kwargs)
         except Exception, e:
-            print "异常:%s" % (e.__str__(),)
+            logger.exception("异常:%s" % (e.__str__(),))
             try:
                 method = self.request.method
                 accept = self.request.headers.get("Accept")
