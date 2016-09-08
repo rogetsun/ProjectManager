@@ -225,7 +225,8 @@ angular.module('mfu.controller', ['ngFileUpload'])
                             }
                             for (var i = idx; i < $scope.editFunc.files.length; i++) {
                                 var tmpFile = $scope.editFunc.files[i];
-                                if (tmpFile.isUpdate == 1 || (tmpFile.isUpdate == 2 && tmpFile.uploadFlag == 3)) {
+                                if ((tmpFile.isUpdate == 1 && tmpFile.uploadFlag != 1)
+                                    || (tmpFile.isUpdate == 2 && tmpFile.uploadFlag == 3)) {
                                     idx = i + 1;
                                     $scope.uploadingFilesID.push(tmpFile.ff_id);
                                     console.log("upload " + tmpFile.file_path_name);
