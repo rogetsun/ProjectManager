@@ -74,16 +74,9 @@ angular.module('file.controller', ['ngFileUpload'])
 
             $scope.showFileHis = function ($event, f) {
                 $mdDialog.show({
-                    templateUrl: 'file_his_template',
+                    templateUrl: 'app/file/template/file-his.html',
                     targetEvent: $event,
-                    locals: {file: f, ftJSON: $scope.ftJSON},
-                    resolve: {
-                        files: ['fileService', function (fileService) {
-                            return fileService.getFileHis(f.file_id).then(function (res) {
-                                return res.data;
-                            })
-                        }]
-                    },
+                    locals: {file_id: f.file_id},
                     controller: 'fileHisController'
                 })
             };
@@ -214,5 +207,13 @@ angular.module('file.controller', ['ngFileUpload'])
             $scope.cancel = function () {
                 $mdDialog.hide();
             };
+            /**
+             * 下载指定文件指定版本
+             * @param file_id
+             * @param version
+             */
+            $scope.fileDownload = function (file_id, version) {
+                window.open("file/dl/" + file_id + "/" + version);
+            }
         }])
 ;
