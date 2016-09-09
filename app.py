@@ -22,8 +22,6 @@ setting = dict(
     cookie_secret="0987654poiuytrewqlkjhgfdsamnbvcxzsongywSONGYWLITIANXINGlitianxing123abc,./<>?",
     login_url=server_config.server_route_prefix + "/",
     debug=server_config.debug,
-    # max_buffer_size="200MB",
-    # max_body_size="200MB",
 )
 logger.debug(setting)
 
