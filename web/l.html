@@ -117,7 +117,7 @@
                                 var ret = res.data;
                                 if (ret.ret_code == 0) {
                                     uvTip.showTip("登录成功", 1000).then(function () {
-                                        window.location.href = "{{baseURL}}/";
+                                        window.location.href = "{{baseURL}}";
                                     });
                                 } else {
                                     uvTip.showTip(ret.ret_msg, 2000)

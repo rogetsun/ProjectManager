@@ -1,4 +1,5 @@
 # coding:utf-8
+import time
 from tornado.web import RequestHandler, authenticated
 import os, json
 
@@ -40,7 +41,7 @@ class LoginHandler(RequestHandler):
             r = user_service.check_login(user, password)
             if isinstance(r, dict):
                 r['login_password'] = password
-                self.set_secure_cookie(user_cookie_key, json.dumps(r))
+                self.set_secure_cookie(user_cookie_key, json.dumps(r), expires=time.time() + 60 * 60 * 8)
                 self.write(mk_res())
             else:
                 self.write(mk_res(ret_code=1, ret_msg=str(r)))
@@ -66,7 +67,7 @@ class UserListHandler(BaseHandler):
 class LogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie(server_config.user_cookie_key)
-        self.redirect("/")
+        self.redirect(server_config.server_route_prefix)
 
 
 if __name__ == "__main__":
