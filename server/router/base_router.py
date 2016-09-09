@@ -5,6 +5,7 @@ import tornado
 from tornado.web import RequestHandler, authenticated, ErrorHandler, StaticFileHandler
 
 from server import mk_res
+from server import server_config
 from server.log_config import logger
 from server.server_config import user_cookie_key
 import json
@@ -31,7 +32,7 @@ def router(func):
                     regx = re.compile("HTTP\s+(\d+):.")
                     g = regx.search(e.__str__())
                     ret_code = g and g.group(1) or "未知错误"
-                    self.render("error.html", ret_code=ret_code, ret_msg=e)
+                    self.render("error.html", ret_code=ret_code, ret_msg=e, baseURL=server_config.server_route_prefix)
                 else:
                     self.write(mk_res(ret_code=99, ret_msg=e.__str__()))
             except Exception as e2:
@@ -39,7 +40,8 @@ def router(func):
                 regx = re.compile("HTTP\s+(\d+):.")
                 g = regx.search(e.__str__())
                 ret_code = g and g.group(1) or "未知错误"
-                self.render("error.html", ret_code=ret_code, ret_msg=e)
+                self.render("error.html", ret_code=ret_code, ret_msg=e,
+                            baseURL=server_config.server_route_prefix)
 
     return exe_f
 
@@ -58,7 +60,8 @@ class BaseHandler(RequestHandler):
 
 class PageNotFoundHandler(BaseHandler):
     def get(self, *args, **kwargs):
-        self.render("error.html", ret_code='404', ret_msg='您访问的地址不存在')
+        self.render("error.html", ret_code='404', ret_msg='您访问的地址不存在',
+                    baseURL=server_config.server_route_prefix)
 
 
 class UVStaticHandler(StaticFileHandler):
@@ -77,4 +80,5 @@ class UVStaticHandler(StaticFileHandler):
             pass
         except Exception as e:
             logger.exception(e)
-            self.render("error.html", ret_code=self.get_status(), ret_msg='%s' % (e,))
+            self.render("error.html", ret_code=self.get_status(), ret_msg='%s' % (e,),
+                        baseURL=server_config.server_route_prefix)

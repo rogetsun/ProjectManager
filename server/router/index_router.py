@@ -20,11 +20,11 @@ class IndexHandler(BaseHandler):
         if user:
             r = user_service.check_login(user.get("login_no"), user.get("login_password"))
             if isinstance(r, dict):
-                self.render("index.html")
+                self.render("index.html", baseURL=server_config.server_route_prefix)
             else:
-                self.render("l.html")
+                self.render("l.html", baseURL=server_config.server_route_prefix)
         else:
-            self.render("l.html")
+            self.render("l.html", baseURL=server_config.server_route_prefix)
 
 
 class LoginHandler(RequestHandler):

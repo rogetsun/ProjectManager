@@ -20,11 +20,19 @@ staticHandlers = [
 setting = dict(
     template_path=os.path.dirname(__file__) + "/web",
     cookie_secret="0987654poiuytrewqlkjhgfdsamnbvcxzsongywSONGYWLITIANXINGlitianxing123abc,./<>?",
-    login_url="/",
+    login_url=server_config.server_route_prefix + "/",
     debug=server_config.debug,
     # max_buffer_size="200MB",
     # max_body_size="200MB",
 )
 logger.debug(setting)
 
-app = Application(staticHandlers + handlers, **setting)
+# 加项目route url前缀
+tmp_handlers = []
+for h in staticHandlers + handlers:
+    tmp_url = "%s%s" % (server_config.server_route_prefix, h[0])
+    tmp_handler = (tmp_url,) + h[1:]
+    logger.debug(tmp_handler)
+    tmp_handlers.append(tmp_handler)
+
+app = Application(tmp_handlers, **setting)
