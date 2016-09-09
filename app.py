@@ -28,7 +28,7 @@ logger.debug(setting)
 # 加项目route url前缀
 tmp_handlers = []
 for h in staticHandlers + handlers:
-    tmp_url = "%s%s" % (server_config.server_route_prefix, h[0][-1] == "/" and h[0][0:-1] or h[0])
+    tmp_url = "%s%s" % (server_config.server_route_prefix, h[0] == "/" and "" or h[0])
     tmp_handler = (tmp_url,) + h[1:]
     logger.debug(tmp_handler)
     tmp_handlers.append(tmp_handler)
