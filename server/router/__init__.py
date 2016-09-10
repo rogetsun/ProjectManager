@@ -1,6 +1,7 @@
 # coding:utf-8
 from server.router.base_router import PageNotFoundHandler
 from server.router.func_file_router import FuncFileHandler
+from server.router.server_router import ServerHandler, ServersHandler
 from .func_router import FuncHandler, FuncsHandler, FuncDownloadHandler
 from .file_type_router import FileTypeHandler
 from .index_router import IndexHandler, LoginHandler, UserHandler, UserListHandler, LogoutHandler
@@ -35,6 +36,11 @@ handlers = [
     , ('/func/dl', FuncDownloadHandler)
     # func_file
     , ('/project/(\d+)/func/(\d+)/upd-file/(\d+)', FuncFileHandler)
+
+    # server
+    , ('/server', ServerHandler)
+    , ('/server/(\d+)', ServerHandler)
+    , ('/servers', ServersHandler)
 
     # 404
     , ('.*', PageNotFoundHandler)

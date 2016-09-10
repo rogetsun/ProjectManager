@@ -54,6 +54,16 @@ angular.module('app.router', ['ui.router'])
                 controller: 'moduleFileUpdateController',
                 templateUrl: 'app/mod-file-upd/template/mod-file-upd.html'
             })
+            .state('server', {
+                url: '/server',
+                parent: 'main',
+                template: '<ui-view flex layout="column"></ui-view>'
+            })
+            .state('server.list', {
+                url: '/list',
+                controller: 'serverListController',
+                templateUrl: 'app/server/template/server-list.html'
+            })
 
     }])
     .run(['$rootScope', '$state', function ($rootScope, $state) {
@@ -66,11 +76,13 @@ angular.module('app.router', ['ui.router'])
             //一级模块
             {id: 1, name: '项目管理', pid: 0, state: 'project.detail', no_show_init: '1', root_distance: 1}
             , {id: 2, name: '项目列表', pid: 0, state: 'project.list', root_distance: 1}
+            , {id: 3, name: '主机管理', pid: 0, state: 'server.list', root_distance: 1, admin: 1}
+
             //二级项目管理内容
-            , {id: 3, name: '项目文件类型', pid: 1, state: 'pd.ft', root_distance: 2}
-            , {id: 4, name: '项目文件', pid: 1, state: 'pd.files', root_distance: 2}
-            , {id: 5, name: '项目模块', pid: 1, state: 'pd.module', root_distance: 2, admin: 1}
-            , {id: 6, name: '项目模块文件更新', pid: 1, state: 'pd.mod-file-upd', root_distance: 2}
+            , {id: 11, name: '项目文件类型', pid: 1, state: 'pd.ft', root_distance: 2}
+            , {id: 12, name: '项目文件', pid: 1, state: 'pd.files', root_distance: 2}
+            , {id: 13, name: '项目模块', pid: 1, state: 'pd.module', root_distance: 2, admin: 1}
+            , {id: 14, name: '项目模块文件更新', pid: 1, state: 'pd.mod-file-upd', root_distance: 2}
         ];
         var root = {name: 'root', id: 0, pid: -1, root_distance: 0};
 
