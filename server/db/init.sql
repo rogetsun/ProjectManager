@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS `pm`.`d_deploy_files_rec` (
   `file_id` INT NOT NULL,
   `version` INT NOT NULL)
 ENGINE = InnoDB
-COMMENT = '上线部署文件信息记录\n';
+COMMENT = '上线部署文件信息记录';
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
