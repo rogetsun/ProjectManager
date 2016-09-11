@@ -4,5 +4,5 @@
 angular.module('app.resource',
     [
         'resource.project', 'resource.user', 'resource.file_type', 'resource.file', 'resource.func',
-        'resource.server'
+        'resource.server', 'resource.deploy-instance'
     ]);

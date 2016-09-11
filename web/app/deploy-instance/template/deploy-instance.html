@@ -1,0 +1,119 @@
+<md-content layout="row" layout-align="start start" layout-wrap>
+
+    <md-card ng-repeat="di in deployInstances">
+        <md-card-header class="uv-card-header">
+            <span>{{di.di_name}}</span>
+            <span flex></span>
+            <span style="cursor:pointer;margin-left:10px;" ng-click="defDI(di)">
+                <md-icon class="md-mini" md-svg-icon="draw">
+                    <md-tooltip md-delay="2000">修改[{{di.di_name}}]</md-tooltip>
+                </md-icon>
+            </span>
+            <span style="cursor:pointer;margin-left:10px;" ng-click="delDeployInstance(di)">
+                <md-icon class="md-mini" md-svg-icon="delete">
+                    <md-tooltip md-delay="2000">删除[{{di.di_name}}]</md-tooltip>
+                </md-icon>
+            </span>
+            <span style="cursor:pointer;margin-left:10px;" ng-click="defDIFilePathMapping(di)">
+                <md-icon class="md-mini" md-svg-icon="source-download">
+                    <md-tooltip md-delay="2000">部署文件路径映射</md-tooltip>
+                </md-icon>
+            </span>
+        </md-card-header>
+        <md-card-content>
+            <p>主机：{{di.server_name}}</p>
+            <p>IP：{{di.server_ip}}</p>
+            <p>部署路径：{{di.di_root_path}}</p>
+            <p>启动脚本：{{di.di_start_shell}}</p>
+            <p>停止脚本：{{di.di_stop_shell}}</p>
+        </md-card-content>
+        <md-card-content>
+            <md-button ng-if="di.di_start_shell" class="text-success md-mini">启动</md-button>
+            <md-button ng-if="di.di_stop_shell" class="text-danger md-mini">停止</md-button>
+        </md-card-content>
+    </md-card>
+    <md-card style="height: 200px;width:250px;cursor: pointer;" ng-click="defDI()">
+        <md-tooltip md-delay="2000">新增一个部署实例</md-tooltip>
+        <md-card-content layout="column" layout="center center" layout-fill>
+            <md-icon md-svg-icon="plus" style="color:#ccc;"></md-icon>
+        </md-card-content>
+    </md-card>
+
+</md-content>
+
+<md-sidenav md-component-id="di-def-sidenav" class="md-sidenav-right" style="min-width: 500px;"
+            layout-align="start stretch" layout="column">
+    <md-card style="margin:0;" layout-fill>
+        <md-card-header class="uv-card-header" layout="row">
+            <span flex layout-align="center center" layout="row">实例配置</span>
+
+            <span style="cursor: pointer;width:20px;" layout-fill layout-align="center center"
+                  ng-click="defDIFilePathMapping()">
+                <md-icon md-svg-icon="expand-right" class="md-mini">
+                    <md-tooltip>部署文件路径映射</md-tooltip>
+                </md-icon>
+            </span>
+        </md-card-header>
+        <md-card-content>
+            <form name="diForm" layout="column" layout-align="start stretch">
+                <md-input-container>
+                    <label>实例名称</label>
+                    <input type="text" name="di_name" ng-model="di.di_name" required>
+                    <div ng-messages="diForm.di_name.$error" ng-show="diForm.di_name.$dirty">
+                        <div ng-message="required">请输入实例名称</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>选择主机</label>
+                    <md-select name="server_id" ng-change="console.log(di)" ng-model="di.server_id"
+                               md-on-open="getServers()" required>
+                        <md-option ng-repeat="s in servers" ng-value="s.server_id">
+                            {{s.server_name}}[{{s.server_ip}}]
+                        </md-option>
+                    </md-select>
+                    <div ng-messages="diForm.server_id.$error" ng-show="diForm.server_id.$dirty">
+                        <div ng-message="required">请选择部署主机</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>项目部署路径（请使用绝对路径）</label>
+                    <input type="text" name="di_root_path" ng-model="di.di_root_path" required>
+                    <div ng-messages="diForm.di_root_path.$error" ng-show="diForm.di_root_path.$dirty">
+                        <div ng-message="required">请输入项目部署路径</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>实例启动脚本（请使用绝对路径）</label>
+                    <input type="text" name="di_start_shell" ng-model="di.di_start_shell" required>
+                    <div ng-messages="diForm.di_start_shell.$error" ng-show="diForm.di_start_shell.$dirty">
+                        <div ng-message="required">请输入实例启动脚本</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>实例停止脚本（请使用绝对路径）</label>
+                    <input type="text" name="di_stop_shell" ng-model="di.di_stop_shell" required>
+                    <div ng-messages="diForm.di_stop_shell.$error" ng-show="diForm.di_stop_shell.$dirty">
+                        <div ng-message="required">请输入实例停止脚本</div>
+                    </div>
+                </md-input-container>
+            </form>
+        </md-card-content>
+        <md-card-footer layout="row" layout-align="center center">
+            <md-button class="md-primary md-raised" ng-disabled="diForm.$invalid"
+                       ng-click="saveDI()">
+                确定保存
+            </md-button>
+        </md-card-footer>
+    </md-card>
+</md-sidenav>
+
+<md-sidenav md-component-id="di-file-path-mapping-sidenav" class="md-sidenav-right">
+    <md-card style="margin:0;" layout-fill>
+        <md-card-header class="uv-card-header">
+            {{di.di_name}}文件路径映射配置
+        </md-card-header>
+        <md-card-content>
+
+        </md-card-content>
+    </md-card>
+</md-sidenav>

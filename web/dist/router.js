@@ -29,10 +29,13 @@ angular.module('app.router', ['ui.router'])
                 controller: 'projectDetailController',
                 templateUrl: 'app/project/template/project_detail.html'
             })
+            /**
+             * 项目模块文件
+             */
             .state('pd', {
                 url: '/pd',
                 parent: 'project.detail',
-                template: '<ui-view></ui-view>'
+                template: '<ui-view  flex layout="column"></ui-view>'
             })
             .state('pd.ft', {
                 url: '/file-type',
@@ -54,6 +57,14 @@ angular.module('app.router', ['ui.router'])
                 controller: 'moduleFileUpdateController',
                 templateUrl: 'app/mod-file-upd/template/mod-file-upd.html'
             })
+            .state('pd.deploy-instance', {
+                url: '/deploy-instance',
+                controller: 'deployInstanceController',
+                templateUrl: 'app/deploy-instance/template/deploy-instance.html'
+            })
+            /**
+             * 主机管理
+             */
             .state('server', {
                 url: '/server',
                 parent: 'main',
@@ -83,6 +94,8 @@ angular.module('app.router', ['ui.router'])
             , {id: 12, name: '项目文件', pid: 1, state: 'pd.files', root_distance: 2}
             , {id: 13, name: '项目模块', pid: 1, state: 'pd.module', root_distance: 2, admin: 1}
             , {id: 14, name: '项目模块文件更新', pid: 1, state: 'pd.mod-file-upd', root_distance: 2}
+            , {id: 15, name: '部署实例', pid: 1, state: 'pd.deploy-instance', root_distance: 2}
+
         ];
         var root = {name: 'root', id: 0, pid: -1, root_distance: 0};
 

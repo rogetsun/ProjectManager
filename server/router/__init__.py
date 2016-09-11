@@ -1,5 +1,6 @@
 # coding:utf-8
 from server.router.base_router import PageNotFoundHandler
+from server.router.deploy_instance_router import DeployInstanceHandler, DeployInstancesHandler
 from server.router.func_file_router import FuncFileHandler
 from server.router.server_router import ServerHandler, ServersHandler
 from .func_router import FuncHandler, FuncsHandler, FuncDownloadHandler
@@ -27,7 +28,7 @@ handlers = [
     , ('/project/(\d+)/ft/(\d+)/file/(\S+)', FileHandler)
     , ('/file/(\d+)/his', FileHisHandler)
     , ('/file/dl/(\d+)/(\d+)', FileDownHandler)
-    # file_type
+    # file-type
     , ('/project/(\d+)/file_type', FileTypeHandler)
     # func
     , ('/project/(\d+)/func', FuncHandler)
@@ -41,6 +42,11 @@ handlers = [
     , ('/server', ServerHandler)
     , ('/server/(\d+)', ServerHandler)
     , ('/servers', ServersHandler)
+
+    # deploy-instance
+    , ('/project/(\d+)/deploy-instance', DeployInstanceHandler)
+    , ('/project/(\d+)/deploy-instances', DeployInstancesHandler)
+
 
     # 404
     , ('.*', PageNotFoundHandler)

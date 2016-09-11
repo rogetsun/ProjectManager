@@ -1,7 +1,73 @@
 /*!
  * projectmanager - JS for Debug
- * @licence projectmanager - v1.0.0 (2016-09-10)
+ * @licence projectmanager - v1.0.0 (2016-09-11)
  */
+/**
+ * Created by uv2sun on 16/9/11.
+ */
+
+angular.module('deploy-instance', ['deploy-instance.controller']);
+angular.module('deploy-instance.controller', [])
+    .controller('deployInstanceController', [
+        '$scope', '$timeout', '$mdSidenav', 'serverService', 'uvmAlert', 'deployInstanceService',
+        function ($scope, $timeout, $mdSidenav, serverService, uvmAlert, deployInstanceService) {
+            $timeout(function () {
+                deployInstanceService.getDeployInstances($scope.project.project_id).then(function (res) {
+                    $scope.deployInstances = res.data;
+                });
+                /**
+                 * 获取主机列表信息
+                 */
+                serverService.getAllServers().then(function (res) {
+                    $scope.servers = res.data;
+                });
+            });
+            /**
+             * 部署实例列表
+             * @type {Array}
+             */
+            $scope.dis = [];
+
+            /**
+             * 打开sidenav定义部署实例
+             * @param di
+             */
+            $scope.defDI = function (di) {
+                $scope.di = di || $scope.di || {di_name: '实例' + ($scope.deployInstances.length + 1)};
+                $mdSidenav('di-def-sidenav').open();
+            };
+            /**
+             * 打开sidenav定义部署文件路径映射信息
+             * @param di_id
+             */
+            $scope.defDIFilePathMapping = function (di) {
+                if (!di || !di.di_id) {
+                    uvmAlert.alert("请先保存部署实例信息");
+                    return;
+                }
+                //todo 定义映射表,提取保存映射信息
+                $mdSidenav('di-file-path-mapping-sidenav').open();
+            };
+
+            $scope.saveDI = function () {
+                deployInstanceService.saveDeployInstance($scope.project.project_id, $scope.di).then(function (res) {
+                    if (res && res.ret_code == 0) {
+                        $scope.di.di_id = $scope.di.di_id || res.data.di_id;
+                        $mdSidenav('di-def-sidenav').close();
+                        uvmAlert.alert("实例保存成功!").then(function () {
+                            $scope.reloadState();
+                        })
+                    } else {
+                        uvmAlert.alert('保存失败,' + res.ret_msg);
+                    }
+                }).catch(function (res) {
+                    uvmAlert.alert('保存失败,[' + res.status + ']' + res.data);
+                });
+            };
+
+        }
+    ])
+;
 /**
  * Created by uv2sun on 16/6/13.
  */
