@@ -53,7 +53,11 @@
             <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
                      ng-show="orderKey=='file_path_name'"></md-icon>
         </th>
-        <th>最新版本号</th>
+        <th ng-click="orderFiles('curr_version')" style="cursor:pointer;">
+            最新版本号
+            <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
+                     ng-show="orderKey=='curr_version'"></md-icon>
+        </th>
         <th ng-click="orderFiles('create_time')" style="cursor:pointer;">
             更新时间
             <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
