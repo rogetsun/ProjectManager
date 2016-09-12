@@ -431,10 +431,10 @@ angular.module('main.controller', [])
             });
 
 
-            $scope.fb = {isOpen: true};
-            $timeout(function () {
-                $scope.fb.isOpen = false;
-            }, 100);
+            $scope.fb = {isOpen: false};
+            // $timeout(function () {
+            //     $scope.fb.isOpen = false;
+            // }, 100);
 
             $scope.logout = function () {
                 uvmAlert.confirm('确定退出系统?').then(function () {

@@ -1,6 +1,6 @@
 <md-content layout="row" layout-align="start start" layout-wrap>
 
-    <md-card ng-repeat="di in deployInstances">
+    <md-card ng-repeat="di in deployInstances" style="min-width: 300px;">
         <md-card-header class="uv-card-header">
             <span>{{di.di_name}}</span>
             <span flex></span>
@@ -22,9 +22,26 @@
             <p>启动脚本：{{di.di_start_shell}}</p>
             <p>停止脚本：{{di.di_stop_shell}}</p>
         </md-card-content>
-        <md-card-content>
-            <md-button ng-if="di.di_start_shell" class="text-success md-mini">启动</md-button>
-            <md-button ng-if="di.di_stop_shell" class="text-danger md-mini">停止</md-button>
+        <md-card-content style="height: 50px;">
+            <!--<md-button ng-if="di.di_start_shell" class="text-success md-mini">启动</md-button>-->
+            <!--<md-button ng-if="di.di_stop_shell" class="text-danger md-mini">停止</md-button>-->
+            <!--<md-button class="text-primary md-mini md-fab">日志</md-button>-->
+            <md-fab-speed-dial md-direction="left" style="bottom:10px;right:10px;"
+                               class="md-scale md-fab-bottom-right" md-open="di.isOpen">
+                <md-fab-trigger>
+                    <md-button aria-label="Add..." class="md-fab md-mini"
+                               ng-style="{'box-shadow':di.isOpen?'':'0 0 0 0 #eee'}"
+                               style="margin:5px;background-color: transparent;">
+                        <md-icon md-svg-icon="cogwheel" style="color:#666;"></md-icon>
+                    </md-button>
+                </md-fab-trigger>
+
+                <md-fab-actions>
+                    <md-button class="md-primary md-mini md-fab" style="margin:5px;">启动</md-button>
+                    <md-button class="md-warn md-mini md-fab" style="margin:5px;">停止</md-button>
+                    <md-button class="md-primary md-mini md-fab" style="margin:5px;">日志</md-button>
+                </md-fab-actions>
+            </md-fab-speed-dial>
         </md-card-content>
     </md-card>
     <md-card style="height: 200px;width:250px;cursor: pointer;" ng-click="defDI()">
