@@ -7,10 +7,10 @@ __author__ = 'uv2sun'
 def add_deploy_instance(di, db):
     """添加项目部署实例"""
     di_id = db.insertOne("""
-    insert into pm.d_deploy_instance(project_id, di_name, server_id, di_root_path, di_start_shell, di_stop_shell)
-    VALUES (%s,%s,%s,%s,%s,%s)
+    insert into pm.d_deploy_instance(project_id, di_name, server_id, di_root_path, di_start_shell, di_stop_shell,di_log_shell)
+    VALUES (%s,%s,%s,%s,%s,%s,%s)
     """, (di.get('project_id'), di.get('di_name'), di.get('server_id'), di.get('di_root_path', ''),
-          di.get('di_start_shell', ''), di.get('di_stop_shell', '')))
+          di.get('di_start_shell', ''), di.get('di_stop_shell', ''), di.get('di_log_shell', '')))
 
     return di_id
 
@@ -22,10 +22,11 @@ def update_deploy_instance(di, db):
         server_id=%s,
         di_root_path=%s,
         di_start_shell=%s,
-        di_stop_shell=%s
+        di_stop_shell=%s,
+        di_log_shell=%s
         WHERE di_id=%s
-    """, (di.get('di_name'), di.get('server_id'), di.get('di_root_path', ''), di.get('di_start_shell'),
-          di.get('di_stop_shell'),
+    """, (di.get('di_name'), di.get('server_id'), di.get('di_root_path', ''), di.get('di_start_shell', ''),
+          di.get('di_stop_shell', ''), di.get('di_log_shell', ''),
           di.get('di_id')))
 
 

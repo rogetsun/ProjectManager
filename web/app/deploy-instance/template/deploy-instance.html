@@ -21,6 +21,7 @@
             <p>部署路径：{{di.di_root_path}}</p>
             <p>启动脚本：{{di.di_start_shell}}</p>
             <p>停止脚本：{{di.di_stop_shell}}</p>
+            <p>日志脚本：{{di.di_log_shell}}</p>
         </md-card-content>
         <md-card-content style="height: 50px;">
             <!--<md-button ng-if="di.di_start_shell" class="text-success md-mini">启动</md-button>-->
@@ -53,10 +54,9 @@
 
 </md-content>
 
-<md-sidenav md-component-id="di-def-sidenav" class="md-sidenav-right" style="min-width: 500px;"
-            layout-align="start stretch" layout="column">
+<md-sidenav md-component-id="di-def-sidenav" class="md-sidenav-right" style="min-width: 500px;">
     <md-card style="margin:0;" layout-fill>
-        <md-card-header class="uv-card-header" layout="row">
+        <md-card-header class="uv-card-header" layout="row" style="height:50px;">
             <span flex layout-align="center center" layout="row">实例配置</span>
 
             <span style="cursor: pointer;width:20px;" layout-fill layout-align="center center"
@@ -66,7 +66,7 @@
                 </md-icon>
             </span>
         </md-card-header>
-        <md-card-content>
+        <md-card-content layout="column" style="overflow: scroll;">
             <form name="diForm" layout="column" layout-align="start stretch">
                 <md-input-container>
                     <label>实例名称</label>
@@ -106,6 +106,13 @@
                     <input type="text" name="di_stop_shell" ng-model="di.di_stop_shell" required>
                     <div ng-messages="diForm.di_stop_shell.$error" ng-show="diForm.di_stop_shell.$dirty">
                         <div ng-message="required">请输入实例停止脚本</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>查看日志脚本（请使用绝对路径）</label>
+                    <input type="text" name="di_log_shell" ng-model="di.di_log_shell" required>
+                    <div ng-messages="diForm.di_log_shell.$error" ng-show="diForm.di_log_shell.$dirty">
+                        <div ng-message="required">请输入查看日志脚本</div>
                     </div>
                 </md-input-container>
             </form>
