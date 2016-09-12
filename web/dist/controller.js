@@ -1,6 +1,6 @@
 /*!
  * projectmanager - JS for Debug
- * @licence projectmanager - v1.0.0 (2016-09-11)
+ * @licence projectmanager - v1.0.0 (2016-09-12)
  */
 /**
  * Created by uv2sun on 16/9/11.
@@ -35,18 +35,6 @@ angular.module('deploy-instance.controller', [])
             $scope.defDI = function (di) {
                 $scope.di = di || $scope.di || {di_name: '实例' + ($scope.deployInstances.length + 1)};
                 $mdSidenav('di-def-sidenav').open();
-            };
-            /**
-             * 打开sidenav定义部署文件路径映射信息
-             * @param di_id
-             */
-            $scope.defDIFilePathMapping = function (di) {
-                if (!di || !di.di_id) {
-                    uvmAlert.alert("请先保存部署实例信息");
-                    return;
-                }
-                //todo 定义映射表,提取保存映射信息
-                $mdSidenav('di-file-path-mapping-sidenav').open();
             };
 
             $scope.saveDI = function () {
@@ -291,32 +279,63 @@ angular.module('file.controller', ['ngFileUpload'])
                     uvTip.showTip('请选择文件', 1000);
                     return;
                 }
-                $scope.uploading = true;
+                $scope.uploading = 1;
                 $scope.percent = 0;
-                Upload.upload({
-                    url: 'project/' + project.project_id + '/file',
-                    data: {file: $scope.files, folder: $scope.folder || "", ft_id: $scope.ft.ft_id}
-                }).then(function (resp) {
-                    $scope.uploading = false;
-                    var res = resp.data;
-                    if (res && res.ret_code == 0) {
-                        angular.forEach(res.data, function (value) {
-                            this[value.file_name].version = value.curr_version;
-                        }, $scope.filesJSON);
-                        uvTip.showTip('上传成功!').then(function () {
-                            $mdDialog.hide(true);
-                        });
-                    } else {
-                        uvDialog.show('上传失败,' + res.ret_msg);
+                var uploadingCount = 1;
+                var uploadingFiles = [];
+                var idx = 0;
+                var uploading = function () {
+                    if ($scope.uploading == 3) {
+                        return;
                     }
-                }, function (resp) {
-                    console.log('Error status: ' + resp.status);
-                    console.log(resp);
-                    uvDialog.show('上传失败,' + resp);
-                    $scope.uploading = false;
-                }, function (evt) {
-                    $scope.percent = parseInt(100.0 * evt.loaded / evt.total);
-                });
+                    if (uploadingFiles.length >= uploadingCount) {
+                        console.log('waiting 100');
+                        setTimeout(uploading, 100);
+                        return;
+                    }
+                    if (idx >= $scope.files.length) {
+                        console.log('上传马上完成');
+                        if (uploadingFiles.length > 0) {
+                            console.log('waiting 100');
+                            setTimeout(uploading, 100);
+                        } else {
+                            console.log('over');
+                            $scope.uploading = 2;
+                            $scope.percent = 100;
+                        }
+                        return;
+                    }
+                    (function (idx) {
+                        var file = $scope.files[idx];
+                        uploadingFiles.push(file.name);
+                        var fp = file.path ? file.path.substring(0, file.path.lastIndexOf("/")) : '';
+                        Upload.upload({
+                            url: 'project/' + project.project_id + '/file',
+                            data: {file: file, folder: ($scope.folder || "") + "/" + fp, ft_id: $scope.ft.ft_id}
+                        }).then(function (resp) {
+                            uploadingFiles.splice(uploadingFiles.indexOf(file.name), 1);
+                            var res = resp.data;
+                            if (res && res.ret_code == 0) {
+                                angular.forEach(res.data, function (value) {
+                                    console.log(file.path || file.name);
+                                    this[file.path || file.name].version = value.curr_version;
+                                }, $scope.filesJSON);
+                            } else {
+                                uvDialog.show((file.path || file.name) + '上传失败,' + res.ret_msg);
+                            }
+                        }, function (resp) {
+                            console.log('Error status: ' + resp.status);
+                            console.log(resp);
+                            uvDialog.show('上传失败,' + resp);
+                            $scope.uploading = 3;
+                        }, function (evt) {
+                            var p = parseInt((idx / $scope.files.length) * 100);
+                            $scope.percent = p + parseInt((100 / $scope.files.length) * (evt.loaded / evt.total));
+                        });
+                    })(idx++);
+                    uploading();
+                };
+                uploading();
             };
             $scope.folderChange = function () {
                 if ($scope.folder) {
@@ -345,16 +364,16 @@ angular.module('file.controller', ['ngFileUpload'])
 
             function getFileInfo(files) {
                 angular.forEach(files, function (f) {
-                    if ($scope.filesJSON[f.name]) {
-                        delete $scope.filesJSON[f.name];
+                    if ($scope.filesJSON[f.path || f.name]) {
+                        delete $scope.filesJSON[f.path || f.name];
                         var idx = $scope.files.indexOf(f);
                         if (idx > -1) $scope.files.splice(idx, 1, f);
                     } else {
                         $scope.files.push(f);
                     }
-                    $scope.filesJSON[f.name] = f;
-
-                    fileService.getFile(project.project_id, $scope.ft.ft_id, $scope.folder || '', f.name).then(function (res) {
+                    $scope.filesJSON[f.path || f.name] = f;
+                    var fp = f.path ? f.path.substring(0, f.path.lastIndexOf("/")) : '';
+                    fileService.getFile(project.project_id, $scope.ft.ft_id, ($scope.folder || '') + '/' + fp, f.name).then(function (res) {
                         if (res && res.ret_code == 0) {
                             f.curr_version = res.data ? res.data.curr_version : '无';
                         }
@@ -372,6 +391,10 @@ angular.module('file.controller', ['ngFileUpload'])
                 }
             }
 
+            $scope.finish = function () {
+                $scope.$parent.reloadState();
+                $mdDialog.hide();
+            }
         }])
     .controller('fileHisController', [
         '$scope', 'file', 'ftJSON', 'files', '$mdDialog',

@@ -48,9 +48,9 @@ class FileHandler(BaseHandler):
     def get(self, project_id, ft_id, file_name):
         folder = self.get_argument('folder', '')
         file_path_name = folder + os.path.sep + file_name
-        print file_path_name
+        logger.debug(file_path_name)
         f = file_serivce.get_file(project_id, ft_id, file_path_name)
-        print f
+        logger.debug(f)
         self.write(mk_res(data=f))
 
 

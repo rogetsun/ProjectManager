@@ -14,11 +14,6 @@
                     <md-tooltip md-delay="2000">删除[{{di.di_name}}]</md-tooltip>
                 </md-icon>
             </span>
-            <span style="cursor:pointer;margin-left:10px;" ng-click="defDIFilePathMapping(di)">
-                <md-icon class="md-mini" md-svg-icon="source-download">
-                    <md-tooltip md-delay="2000">部署文件路径映射</md-tooltip>
-                </md-icon>
-            </span>
         </md-card-header>
         <md-card-content>
             <p>主机：{{di.server_name}}</p>
@@ -104,16 +99,5 @@
                 确定保存
             </md-button>
         </md-card-footer>
-    </md-card>
-</md-sidenav>
-
-<md-sidenav md-component-id="di-file-path-mapping-sidenav" class="md-sidenav-right">
-    <md-card style="margin:0;" layout-fill>
-        <md-card-header class="uv-card-header">
-            {{di.di_name}}文件路径映射配置
-        </md-card-header>
-        <md-card-content>
-
-        </md-card-content>
     </md-card>
 </md-sidenav>

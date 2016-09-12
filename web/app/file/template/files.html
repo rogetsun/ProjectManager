@@ -61,7 +61,7 @@
         <tr ng-repeat="f in files|uvIndexOf:'ft_id':selectedFTIDs|filter:query|orderBy:orderKey:orderReverse">
             <td>{{f.file_id}}</td>
             <td>{{ftJSON[f.ft_id].ft_name}}</td>
-            <td>{{f.file_path_name}}</td>
+            <td>{{ftJSON[f.ft_id].ft_folder}}{{f.file_path_name}}</td>
             <td>
                 <button class="btn btn-xs btn-default" style="width:50px;" ng-click="showFileHis($event,f)">
                     {{f.curr_version}}
@@ -77,7 +77,7 @@
 </md-content>
 
 <script type="text/ng-template" id="def_file_template">
-    <md-dialog aria-label="file_type" ng-cloak style="min-width: 600px;">
+    <md-dialog aria-label="file_type" ng-cloak style="min-width: 800px;">
         <form name="fileForm">
             <md-toolbar>
                 <div class="md-toolbar-tools">
@@ -125,7 +125,7 @@
                             </th>
                             </thead>
                             <tr ng-repeat="f in files">
-                                <td>{{f.name}}</td>
+                                <td>{{f.path || f.name}}</td>
                                 <td>
                                     <span class="btn btn-xs btn-default"
                                           style="width:50px;cursor: auto;" disabled>{{f.curr_version || '无'}}</span>
@@ -146,17 +146,22 @@
                 </div>
             </md-dialog-content>
             <md-dialog-content>
-                <md-progress-linear ng-show="uploading||percent" value="{{percent}}"
-                                    md-mode="determinate"></md-progress-linear>
+                <md-progress-linear ng-show="uploading==1||percent" value="{{percent}}"
+                                    md-mode="determinate">{{percent}}
+                </md-progress-linear>
             </md-dialog-content>
             <md-dialog-actions layout="row">
                 <span flex></span>
                 <md-button ng-click="cancel()" aria-label="cancel">
                     取消
                 </md-button>
-                <md-button ng-click="confirm()" ng-disabled="fileForm.$invalid || uploading" style="margin-right:20px;"
-                           aria-label="confirm" class="md-raised md-primary">
+                <md-button ng-click="confirm()" ng-disabled="fileForm.$invalid || uploading==1"
+                           aria-label="confirm" class="md-raised md-primary" ng-hide="uploading==2">
                     上传
+                </md-button>
+                <md-button ng-click="finish()" style="margin-right:20px;" class="md-raised md-primary"
+                           aria-label="cancel" ng-show="uploading==2">
+                    完成&关闭
                 </md-button>
             </md-dialog-actions>
         </form>

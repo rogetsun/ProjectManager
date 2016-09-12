@@ -32,18 +32,6 @@ angular.module('deploy-instance.controller', [])
                 $scope.di = di || $scope.di || {di_name: '实例' + ($scope.deployInstances.length + 1)};
                 $mdSidenav('di-def-sidenav').open();
             };
-            /**
-             * 打开sidenav定义部署文件路径映射信息
-             * @param di_id
-             */
-            $scope.defDIFilePathMapping = function (di) {
-                if (!di || !di.di_id) {
-                    uvmAlert.alert("请先保存部署实例信息");
-                    return;
-                }
-                //todo 定义映射表,提取保存映射信息
-                $mdSidenav('di-file-path-mapping-sidenav').open();
-            };
 
             $scope.saveDI = function () {
                 deployInstanceService.saveDeployInstance($scope.project.project_id, $scope.di).then(function (res) {
