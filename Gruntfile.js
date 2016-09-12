@@ -33,6 +33,10 @@ module.exports = function (grunt) {
             pub: {
                 src: ['web/assets/diy/**/*.js'],
                 dest: 'web/dist/pub.js'
+            },
+            service: {
+                src: ['web/service/**/*.js'],
+                dest: 'web/dist/service.js'
             }
         },
         uglify: {
@@ -45,7 +49,8 @@ module.exports = function (grunt) {
                     'web/dist/router.min.js': ['<%= concat.router.dest%>'],
                     'web/dist/directive.min.js': ['<%= concat.directive.dest%>'],
                     'web/dist/resource.min.js': ['<%= concat.resource.dest%>'],
-                    'web/dist/pub.min.js': ['<%= concat.pub.dest%>']
+                    'web/dist/pub.min.js': ['<%= concat.pub.dest%>'],
+                    'web/dist/service.min.js': ['<%= concat.service.dest%>']
                 }
 
             }
