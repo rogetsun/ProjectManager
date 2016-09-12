@@ -7,6 +7,7 @@ from tornado.web import Application
 from server import server_config
 from server.log_config import logger
 from server.router import handlers
+from server.websocket_router import ws_handlers
 
 staticHandlers = [
     # ("/node_modules/(.*)", tornado.web.StaticFileHandler, {'path': os.path.dirname(__file__) + "/node_modules"}),
@@ -27,7 +28,7 @@ logger.debug(setting)
 
 # 加项目route url前缀
 tmp_handlers = []
-for h in staticHandlers + handlers:
+for h in staticHandlers + handlers + ws_handlers:
     url = h[0]
     if url.__len__() > 0 and url[-1] == "/":
         url = url[0:-1]

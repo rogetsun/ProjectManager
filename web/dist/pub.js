@@ -248,6 +248,66 @@ angular.module('util.httpInterceptor', ['uv.service.loading', 'uvm.service.alert
         return $($('<div></div>').html(this.clone())).html();
     }
 })(jQuery);
+/**
+ * Created by uv2sun on 16/9/12.
+ */
+/**
+ * Created by uv2sun on 15/11/23.
+ */
+;(function ($) {
+    function WS(url, callbacks) {
+        // var host = window.location.host;
+        // var path = window.location.pathname;
+        // var webp = path.substring(0, path.substring(1).indexOf("/") + 1);
+        //var webp="/attendance";
+        // this.websocket = new WebSocket("ws://" + host + webp + "/ws" + url);
+        this.websocket = new WebSocket(url);
+
+        var _this = this;
+        if (callbacks) {
+            if (callbacks.onmessage) {
+                this.websocket.onmessage = function (event) {
+                    callbacks.onmessage(event, _this.websocket);
+                }
+            }
+            if (callbacks.onopen) {
+                this.websocket.onopen = function (event) {
+                    callbacks.onopen(event, _this.websocket);
+                }
+            }
+            if (callbacks.onerror) {
+                this.websocket.onerror = function (event) {
+                    callbacks.onerror(event, _this.websocket);
+                }
+            }
+            if (callbacks.onclose) {
+                this.websocket.onclose = function (event) {
+                    callbacks.onclose(event, _this.websocket);
+                }
+            }
+        }
+    }
+
+    /**
+     * 关闭websocket
+     * @param code
+     * @param reason
+     */
+    WS.prototype.close = function (code, reason) {
+        this.websocket.close(code, reason);
+    };
+
+    WS.prototype.send = function (data) {
+        this.websocket.send(data);
+    };
+    $.extend({
+        websocket: function (url, callbacks) {
+            return new WS(url, callbacks);
+        }
+    });
+
+
+})(jQuery);
 function md5_binary(str) {
     var x = Array();
     var s11 = 7, s12 = 12, s13 = 17, s14 = 22;
@@ -3586,6 +3646,86 @@ angular.module('uv.directive.tree', [])
             }
         }
     }]);
+/**
+ * Created by uv2sun on 16/9/12.
+ */
+
+angular.module('uv.service.websocket', [])
+    .provider('uvWebsocket', [function () {
+        var p = window.location.pathname;
+        if (!p || p.length < 2) {
+            p = "";
+        } else {
+            p = p.substring(1, p.substring(1).indexOf("/") + 1)
+        }
+        var config = {
+            host: window.location.host,
+            appName: p
+        };
+        this.setWSConfig = function (conf) {
+            this._config = {};
+            angular.extend(this._config, config, conf);
+        };
+
+        this.setWSHost = function (host) {
+            if (!this._config) {
+                this._config = config;
+            }
+            this._config.host = host;
+        };
+        this.setWSAppName = function (an) {
+            if (!this._config) this._config = config;
+            this._config.appName = an;
+        };
+
+        this.$get = function () {
+            var _this = this;
+            return {
+                websocket: function (url) {
+                    var su = 'ws://' + _this._config.host + _this._config.appName + '/' + url;
+                    this.ws = $.websocket(su);
+                    return this;
+                },
+                onopen: function (fn) {
+                    var self = this;
+                    this.ws.websocket.onopen = function (event) {
+                        fn.call(self, event)
+                    };
+                    return this;
+                },
+                onmessage: function (fn) {
+                    var self = this;
+                    this.ws.websocket.onmessage = function (event) {
+                        fn.call(self, event)
+                    };
+                    return this;
+                },
+                onerror: function (fn) {
+                    var self = this;
+                    this.ws.websocket.onerror = function (event) {
+                        fn.call(self, event)
+                    };
+                    return this;
+                },
+                onclose: function (fn) {
+                    var self = this;
+                    this.ws.websocket.onclose = function (event) {
+                        fn.call(self, event)
+                    };
+                    return this;
+                },
+                send: function (data) {
+                    this.ws.websocket.send(data);
+                    return this;
+                },
+                close: function (code, reason) {
+                    this.ws.websocket.close(code, reason);
+                }
+            }
+        }
+
+    }])
+;
 /**
  * Created by uv2sun on 16/4/19.
  */
