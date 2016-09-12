@@ -44,7 +44,10 @@
     <table class="table table-condensed table-striped table-hover">
         <thead>
         <th>#</th>
-        <th>文件类型</th>
+        <th ng-click="orderFiles('ft_id')">文件类型
+            <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
+                     ng-show="orderKey=='ft_id'"></md-icon>
+        </th>
         <th ng-click="orderFiles('file_path_name')" style="cursor:pointer;">
             文件
             <md-icon class="md-mini" style="margin-top: -3px;" md-svg-icon="{{orderReverse?'expand-down':'expand-up'}}"
