@@ -14,6 +14,7 @@
         <thead>
         <th>文件类型名称</th>
         <th>文件类型目录</th>
+        <th>文件类型部署路径</th>
         <th>项目文件数量</th>
         <!--<th>文件类型描述</th>-->
         <th>创建时间</th>
@@ -26,6 +27,7 @@
         <tr ng-repeat="ft in file_types">
             <td>{{ft.ft_name}}</td>
             <td>{{ft.ft_folder}}</td>
+            <td>{{ft.ft_deploy_path}}</td>
             <td>{{ft.count}}</td>
             <!--<td>-->
             <!--<p class="font-nowrap" style="width:100px;">{{ft.ft_desc}}</p>-->
@@ -70,10 +72,15 @@
                     <md-input-container>
                         <label>文件类型归属目录</label>
                         <input type="text" required name="ft_folder" ng-model="ft.ft_folder" flex
-                               ng-blur="folderChange(ft.ft_folder)">
+                               ng-blur="folderChange(ft.ft_folder, 'ft_folder')">
                         <div ng-messages="fileTypeForm.ft_folder.$error" ng-show="fileTypeForm.ft_folder.$dirty">
                             <div ng-message="required">请输入文件类型归属目录</div>
                         </div>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>文件类型部署路径</label>
+                        <input type="text" name="ft_deploy_path" ng-model="ft.ft_deploy_path" flex
+                               ng-blur="folderChange(ft.ft_deploy_path, 'ft_deploy_path')">
                     </md-input-container>
 
                     <md-input-container>
@@ -93,7 +100,7 @@
                     取消
                 </md-button>
                 <md-button ng-click="confirm()" ng-disabled="fileTypeForm.$invalid" style="margin-right:20px;"
-                           ng-show="currentLoginUser.role_id==0" aria-label="confirm" class="md-raised md-primary">
+                           aria-label="confirm" class="md-raised md-primary">
                     确定
                 </md-button>
             </md-dialog-actions>

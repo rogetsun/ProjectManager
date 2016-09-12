@@ -8,11 +8,12 @@ __author__ = 'uv2sun'
 
 def save_server(server):
     s = dict()
-    s.setdefault('server_name', 'server')
+    s.setdefault('server_name', '')
     s.setdefault('server_user', '')
     s.setdefault('server_password', '')
     s.setdefault('server_ftp_user', '')
     s.setdefault('server_ftp_password', '')
+    s.setdefault('server_desc', '')
     s.update(server)
 
     db = Mysql()

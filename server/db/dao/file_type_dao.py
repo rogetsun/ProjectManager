@@ -28,16 +28,17 @@ def get_all_file_type(project_id):
 
 
 def add_file_type(param, db=Mysql()):
+    param.setdefault('ft_deploy_path', '')
     r = db.insertOne("""insert into pm.d_file_type(
-                project_id, ft_folder, ft_name, ft_desc, create_time, create_login_id)
-      VALUES (%(project_id)s,%(ft_folder)s,%(ft_name)s,%(ft_desc)s,%(op_time)s,%(login_id)s)""",
+                project_id, ft_folder, ft_name, ft_deploy_path, ft_desc, create_time, create_login_id)
+      VALUES (%(project_id)s,%(ft_folder)s,%(ft_name)s,%(ft_deploy_path)s,%(ft_desc)s,%(op_time)s,%(login_id)s)""",
                      param)
     return r
 
 
 def update_file_type(param, db=Mysql()):
-    print param
+    param.setdefault('ft_deploy_path', '')
     r = db.update('''update pm.d_file_type set
-    ft_name=%(ft_name)s, ft_folder=%(ft_folder)s, ft_desc=%(ft_desc)s
+    ft_name=%(ft_name)s, ft_folder=%(ft_folder)s, ft_deploy_path=%(ft_deploy_path)s, ft_desc=%(ft_desc)s,
     where ft_id=%(ft_id)s''', param)
     return r

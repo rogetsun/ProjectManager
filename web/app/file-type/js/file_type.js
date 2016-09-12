@@ -48,7 +48,7 @@ angular.module('fileType.controller', [])
                     }
                 })
             };
-            $scope.folderChange = function (folder) {
+            $scope.folderChange = function (folder, key) {
                 if (folder) {
                     var f = folder.trim();
 
@@ -61,9 +61,9 @@ angular.module('fileType.controller', [])
                         }
 
                     }
-                    $scope.ft.ft_folder = f;
+                    $scope.ft[key || 'ft_folder'] = f;
                 }
-            }
+            };
         }
     ])
 ;
