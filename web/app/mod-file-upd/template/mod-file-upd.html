@@ -1,14 +1,20 @@
-<md-content layout="row" layout-align="start start">
+<md-content layout="row" layout-align="start start" layout-fill>
     <md-card flex="50">
         <md-card-header class="uv-card-header">
             项目功能模块
             <span flex="5"></span>
             <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_fun" style="margin:0;"
                        ng-click="downloadFunc()">
+                <md-tooltip md-delay="2000">下载所选模块</md-tooltip>
                 <md-icon md-svg-icon="pkg-download" class="md-mini"></md-icon>
             </md-button>
+            <md-button class="md-icon-button md-button md-mini md-primary" aria-label="add_fun" style="margin:0;"
+                       ng-click="deployFunc()">
+                <md-tooltip md-delay="2000">部署所选模块</md-tooltip>
+                <md-icon md-svg-icon="module" class="md-mini"></md-icon>
+            </md-button>
         </md-card-header>
-        <md-card-content>
+        <md-card-content style="overflow: scroll;">
             <div uv-tree="{{treeName}}" uv-tree-data="funcList" uv-tree-multi-select="true"
                  uv-tree-node-id-key="func_id"
                  uv-tree-node-name-key="func_name" uv-tree-node-parent-id-key="par_func_id"

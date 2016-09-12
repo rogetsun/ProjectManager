@@ -3,7 +3,7 @@ from server.router.base_router import PageNotFoundHandler
 from server.router.deploy_instance_router import DeployInstanceHandler, DeployInstancesHandler
 from server.router.func_file_router import FuncFileHandler
 from server.router.server_router import ServerHandler, ServersHandler
-from .func_router import FuncHandler, FuncsHandler, FuncDownloadHandler
+from .func_router import FuncHandler, FuncsHandler, FuncDownloadHandler, FuncsFilesHandler
 from .file_type_router import FileTypeHandler
 from .index_router import IndexHandler, LoginHandler, UserHandler, UserListHandler, LogoutHandler
 from .project_router import ProjectHandler, ProjectsHandler
@@ -35,6 +35,7 @@ handlers = [
     , ('/func/(\d+)/files', FuncHandler)
     , ('/project/(\d+)/funcs', FuncsHandler)
     , ('/func/dl', FuncDownloadHandler)
+    , ('/funcs/files', FuncsFilesHandler)
     # func_file
     , ('/project/(\d+)/func/(\d+)/upd-file/(\d+)', FuncFileHandler)
 
@@ -46,7 +47,6 @@ handlers = [
     # deploy-instance
     , ('/project/(\d+)/deploy-instance', DeployInstanceHandler)
     , ('/project/(\d+)/deploy-instances', DeployInstancesHandler)
-
 
     # 404
     , ('.*', PageNotFoundHandler)

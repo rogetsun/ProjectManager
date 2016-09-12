@@ -77,6 +77,29 @@ angular.module('mfu.controller', ['ngFileUpload'])
                 })
             });
 
+            /**
+             * 部署模块代码
+             */
+            {
+                $scope.deployFunc = function () {
+                    var selectedFuncs = uvTree.getTree($scope.treeName).getSelected();
+                    if (!selectedFuncs || selectedFuncs.length == 0) {
+                        uvTip.showTip('请用复选框选择要部署的模块!', 2000);
+                        return;
+                    }
+                    var fid = [];
+                    angular.forEach(selectedFuncs, function (v) {
+                        this.push(v.func_id);
+                    }, fid);
+                    funcService.getFuncsFiles(fid).then(function (res) {
+                        console.log(res.data);
+                        return res.data;
+                    }).then(function (files) {
+                        $scope.deployFiles = files;
+
+                    });
+                }
+            }
             /***
              * 功能模块相关代码
              */

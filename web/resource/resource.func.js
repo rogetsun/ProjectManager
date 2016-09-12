@@ -18,6 +18,12 @@ angular.module('resource.func', [])
             return $http.get('func/' + func_id + '/files').then(function (res) {
                 return res.data;
             })
-        }
+        };
+
+        this.getFuncsFiles = function (func_id_arr) {
+            return $http.get('funcs/files?fid=' + func_id_arr.join(',')).then(function (res) {
+                return res.data;
+            })
+        };
     }])
 ;

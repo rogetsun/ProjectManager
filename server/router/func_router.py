@@ -43,6 +43,19 @@ class FuncsHandler(BaseHandler):
         self.write(mk_res(data=func_service.get_all_func(project_id)))
 
 
+class FuncsFilesHandler(BaseHandler):
+    @router
+    def get(self):
+        """根据queryString参数fid＝1，3，4，5的func_id 提取文件"""
+        func_ids = self.get_argument('fid')
+        file_list = []
+        if len(func_ids) > 0:
+            regx = re.compile(',*(\d+),*')
+            func_id_list = regx.findall(func_ids)
+            file_list = func_dao.select_funcs_files(func_id_list)
+        self.write(mk_res(file_list))
+
+
 class FuncDownloadHandler(BaseHandler):
     @asynchronous
     @router
