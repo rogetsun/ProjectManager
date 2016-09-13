@@ -1,4 +1,4 @@
-<md-content layout="row" layout-align="left start" style="flex-wrap: wrap;" flex>
+<md-content layout="row" layout-align="left start" layout-wrap flex>
     <md-card ng-repeat="p in projects" style="height: 200px;width: 250px;cursor: pointer;"
              ui-sref="project.detail({project_id:p.project_id})">
         <md-card-header class="uv-card-header">
@@ -19,6 +19,10 @@
                  style="color:#ddd;margin:50px;"></md-icon>
         <md-tooltip md-delay="1000">添加新项目</md-tooltip>
     </md-card>
+</md-content>
+<md-content flex layout="column" layout-align="center center">
+    <uv-clock uv-clock-auto-start="start" uv-clock-face="TwelveHourClock" layout="row"
+              layout-align="center center"></uv-clock>
 </md-content>
 <script type="text/ng-template" id="project_add_template">
     <md-dialog aria-label="Mango (Fruit)" ng-cloak>

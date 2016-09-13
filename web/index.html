@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog-theme-plain.min.css">
     <link rel="stylesheet" href="assets/node_modules/ng-dialog/css/ngDialog.min.css">
     <link rel="stylesheet" href="assets/diy/uv-tree/dtree.css">
+    <link rel="stylesheet" href="assets/diy/uv-clock/flipclock/flipclock.css">
 </head>
 <body ng-app="index-app" layout="column">
 <div ui-view layout="column" flex></div>
@@ -32,8 +33,9 @@
 <script src="assets/node_modules/angular-loading-bar/build/loading-bar.min.js"></script>
 <script src="assets/node_modules/ng-dialog/js/ngDialog.min.js"></script>
 <script src="assets/node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+
 <!--diy公共插件-->
-<script src="dist/pub.min.js"></script>
+<script src="dist/pub.js"></script>
 <!--路由-->
 <script src="dist/router.min.js"></script>
 <!--业务服务-->
@@ -44,6 +46,7 @@
 <script src="dist/controller.min.js"></script>
 <!--资源服务-->
 <script src="dist/resource.min.js"></script>
+
 <script>
     console.log(window.location.host);
     console.log(window.location.pathname);
@@ -53,7 +56,7 @@
     angular.module('index-app',
             [
                 'ngMessages', 'ngMaterial', 'ui.router',
-                'uv.service.loading', 'util.httpInterceptor',
+                'uv.service.loading', 'util.httpInterceptor', 'uv.directive.clock',
                 'uvm.service.alert', 'uv.service.tip', 'uv.fixed', 'uv.service.websocket',
                 'angular-loading-bar', 'uv.service.dialog', 'uv.directive.tree',
                 'app.directive', 'app.router', 'app.resource', 'app.service',

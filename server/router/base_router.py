@@ -28,8 +28,8 @@ def router(func):
                 method = self.request.method
                 accept = self.request.headers.get("Accept")
                 if method == 'GET' and accept and accept.split(",")[0] == 'text/html':
-                    self.render('error.html', ret_code=401,
-                                ret_msg='<a href="%s">登录超时，请重新登录</a>' % (server_config.server_route_prefix,),
+                    self.render('dl.html', file='登录超时，请重新登录',
+                                href='%s' % (server_config.server_route_prefix,),
                                 baseURL=server_config.server_route_prefix)
                 else:
                     self.write(mk_res(ret_code=401, ret_msg='登录过期'))
