@@ -1,6 +1,7 @@
 # coding:utf-8
 import time
 from tornado.websocket import WebSocketHandler
+from tornado.web import asynchronous
 
 __author__ = 'uv2sun'
 
@@ -9,13 +10,10 @@ class DeployFilesWSHandler(WebSocketHandler):
     def data_received(self, chunk):
         pass
 
+    @asynchronous
     def open(self, *args, **kwargs):
         print args
         print kwargs
-        idx = 1
-        while True:
-            self.write_message("%s seconds" % (idx,))
-            time.sleep(1)
 
     def on_message(self, message):
         print message

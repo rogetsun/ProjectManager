@@ -6525,7 +6525,7 @@ angular.module('uv.service.websocket', [])
             this._config.appName = an;
         };
 
-        this.$get = function () {
+        this.$get = ['$q', function ($q) {
             var _this = this;
             return {
                 websocket: function (url) {
@@ -6562,14 +6562,28 @@ angular.module('uv.service.websocket', [])
                     return this;
                 },
                 send: function (data) {
-                    this.ws.websocket.send(data);
-                    return this;
+                    var d = $q.defer();
+                    var thiz = this;
+                    var sender = function () {
+                        if (thiz.ws.websocket.readyState == 0) {
+                            console.log('websocket.readyState:' + thiz.ws.websocket.readyState);
+                            setTimeout(sender, 100);
+                        } else if (thiz.ws.websocket.readyState == 1) {
+                            thiz.ws.websocket.send(data);
+                            d.resolve(thiz);
+                        } else {
+                            // throw new Error("websocket is closed");
+                            d.reject("websocket is closed");
+                        }
+                    };
+                    sender();
+                    return d;
                 },
                 close: function (code, reason) {
                     this.ws.websocket.close(code, reason);
                 }
             }
-        }
+        }]
 
     }])
 ;

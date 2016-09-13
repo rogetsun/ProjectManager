@@ -1,3 +1,44 @@
-<md-dialog>
+<md-dialog class="md-primary" style="min-width: 700px;overflow: hidden;" md-theme="darkTheme">
+    <md-card style="margin:0;" layout="column" layout-align="start stretch">
+        <md-toolbar>
+            <md-card-header class="uv-card-header" layout="row" layout-align="start center">
+                <span>文件部署</span>
+                <span flex></span>
+                <span style="cursor: pointer;" ng-click="closeDeployFileDialog()">
+                    <md-icon md-svg-icon="close" class="md-mini"></md-icon>
+                </span>
+            </md-card-header>
+        </md-toolbar>
+        <md-content style="overflow: scroll;">
+            <table class="table table-striped table-condensed">
+                <thead>
+                <th>#</th>
+                <th>文件</th>
+                <th>文件部署路径</th>
+                <th>版本</th>
+                </thead>
 
+                <tr ng-repeat="f in files track by $index">
+                    <td>{{f.file_id}}</td>
+                    <td>{{f.ft_folder + f.file_path_name}}</td>
+                    <td>{{f.ft_deploy_path || (f.ft_folder + f.file_path_name)}}</td>
+                    <td>{{f.max_version || f.version}}</td>
+                </tr>
+            </table>
+        </md-content>
+        <md-card-content style="font-size: 12px;line-height: 20px;height: 24px;min-height: 24px;padding:4px 16px;"
+                         ng-show="deployStatus" layout="row" layout="start center">
+            {{deployStatus}}
+        </md-card-content>
+        <md-card-content layout="row" layout-align="start center" flex="initial" style="height: 50px;">
+            <md-select ng-model="deployInstance" style="width: 220px;margin-right: 10px;" placeholder="选择部署实例">
+                <md-option ng-value="di" ng-repeat="di in deployInstances">{{di.di_name}}@{{di.server_ip}}</md-option>
+            </md-select>
+            <md-checkbox style="margin-top: 20px;" ng-model="isRestart">自动重启实例</md-checkbox>
+            <span flex></span>
+            <md-button class="md-primary md-raised" ng-click="deploy()">
+                开始部署
+            </md-button>
+        </md-card-content>
+    </md-card>
 </md-dialog>

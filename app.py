@@ -13,6 +13,7 @@ staticHandlers = [
     # ("/node_modules/(.*)", tornado.web.StaticFileHandler, {'path': os.path.dirname(__file__) + "/node_modules"}),
     ("/app/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/app"})
     , ("/assets/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/assets"})
+    , ("/service/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/service"})
     , ("/dist/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/dist"})
     , ("/dl/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/web/download"})
     , ("/dlf/(.*)", tornado.web.StaticFileHandler, {"path": os.path.dirname(__file__) + "/server/files"})
@@ -28,7 +29,7 @@ logger.debug(setting)
 
 # 加项目route url前缀
 tmp_handlers = []
-for h in staticHandlers + handlers + ws_handlers:
+for h in staticHandlers + ws_handlers + handlers:
     url = h[0]
     if url.__len__() > 0 and url[-1] == "/":
         url = url[0:-1]

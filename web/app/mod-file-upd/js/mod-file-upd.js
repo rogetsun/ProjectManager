@@ -8,9 +8,9 @@ angular.module('mfu', ['mfu.controller']);
 angular.module('mfu.controller', ['ngFileUpload'])
     .controller("moduleFileUpdateController", [
         '$scope', '$timeout', '$filter', '$mdSidenav', 'Upload', '$mdDialog', '$stateParams', 'uvTip', 'uvDialog', 'uvmAlert',
-        'uvTree', 'fileTypeService', 'fileService', 'funcService',
+        'uvTree', 'fileTypeService', 'fileService', 'funcService', 'deployFileService',
         function ($scope, $timeout, $filter, $mdSidenav, Upload, $mdDialog, $stateParams, uvTip, uvDialog, uvmAlert,
-                  uvTree, fileTypeService, fileService, funcService) {
+                  uvTree, fileTypeService, fileService, funcService, deployFileService) {
             /**
              * 初始化获取功能列表,项目所有文件信息
              */
@@ -95,8 +95,7 @@ angular.module('mfu.controller', ['ngFileUpload'])
                         console.log(res.data);
                         return res.data;
                     }).then(function (files) {
-                        $scope.deployFiles = files;
-
+                        deployFileService.show($scope.project.project_id, files);
                     });
                 }
             }

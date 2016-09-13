@@ -23,20 +23,6 @@ angular.module('resource.deploy-instance', [])
             })
         };
 
-        this.saveDIFilePathMapping = function (projectID, di) {
-            return $http.post('project/' + projectID + '/deploy-instance/' + di.di_id + '/file-path-mapping', di)
-                .then(function (res) {
-                    return res.data;
-                })
-        };
-
-        this.getDIFilePathMapping = function (projectID, diID) {
-            return $http.get('project/' + projectID + '/deploy-instance/' + diID + '/file-path-mapping')
-                .then(function (res) {
-                    return res.data;
-                })
-        }
-
     }]);
 /**
  * Created by uv2sun on 16/6/13.
