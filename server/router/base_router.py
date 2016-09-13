@@ -22,7 +22,19 @@ def router(func):
 
     def exe_f(self, *args, **kwargs):
         try:
-            return authenticated(func)(self, *args, **kwargs)
+            # return authenticated(func)(self, *args, **kwargs)
+            if not self.current_user:
+                self.set_status(401, '登录过期')
+                method = self.request.method
+                accept = self.request.headers.get("Accept")
+                if method == 'GET' and accept and accept.split(",")[0] == 'text/html':
+                    self.render('error.html', ret_code=401,
+                                ret_msg='<a href="%s">登录超时，请重新登录</a>' % (server_config.server_route_prefix,),
+                                baseURL=server_config.server_route_prefix)
+                else:
+                    self.write(mk_res(ret_code=401, ret_msg='登录过期'))
+            else:
+                return func(self, *args, **kwargs)
         except Exception, e:
             logger.exception("异常:%s" % (e.__str__(),))
             try:

@@ -21,7 +21,7 @@ staticHandlers = [
 setting = dict(
     template_path=os.path.dirname(__file__) + "/web",
     cookie_secret="0987654poiuytrewqlkjhgfdsamnbvcxzsongywSONGYWLITIANXINGlitianxing123abc,./<>?",
-    login_url=server_config.server_route_prefix + "/",
+    login_url=server_config.server_route_prefix,
     debug=server_config.debug,
 )
 logger.debug(setting)

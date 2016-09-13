@@ -1,6 +1,6 @@
 /*!
  * projectmanager - JS for Debug
- * @licence projectmanager - v1.0.0 (2016-09-12)
+ * @licence projectmanager - v1.0.0 (2016-09-13)
  */
 /**
  * Created by uv2sun on 16/9/11.

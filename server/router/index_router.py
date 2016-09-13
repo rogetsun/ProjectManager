@@ -41,7 +41,7 @@ class LoginHandler(RequestHandler):
             r = user_service.check_login(user, password)
             if isinstance(r, dict):
                 r['login_password'] = password
-                self.set_secure_cookie(user_cookie_key, json.dumps(r), expires=time.time() + 60 * 60 * 8)
+                self.set_secure_cookie(user_cookie_key, json.dumps(r), expires=time.time() + 60)
                 self.write(mk_res())
             else:
                 self.write(mk_res(ret_code=1, ret_msg=str(r)))
