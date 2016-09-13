@@ -153,7 +153,6 @@ angular.module('util.httpInterceptor', ['uv.service.loading', 'uvm.service.alert
                     },
                     'responseError': function (response) {
                         if (response.status === 401) {
-                            //TODO 转到登录页面
                             window.alert("登录过期,请重新登录");
                             window.location.href = self.login_url || "/";
                         } else if (response.status == 403) {
