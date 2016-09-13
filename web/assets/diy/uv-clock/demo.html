@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>uv-clock</title>
+    <link rel="stylesheet" href="../../../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="flipclock/flipclock.css">
+</head>
+<body ng-app="app" ng-controller="ctrl">
+<div class="well" style="height: 30px;">
+    <span uv-clock uv-clock-face="DailyCounter" uv-clock-stop-callback="stop()" uv-clock-timestamp="1000"
+          uv-clock-countdown="1"></span>
+</div>
+</body>
+<script src="../../../assets/jquery/jquery-1.11.2.min.js"></script>
+<script src="flipclock/flipclock.min.js"></script>
+<script src="../../../assets/angular/angular.js"></script>
+<script src="uv-clock.js"></script>
+<script>
+    angular.module('app', ['uv.directive.clock'])
+            .controller('ctrl', function ($scope) {
+                $scope.stop = function () {
+                    console.log('stop');
+                }
+            })
+</script>
+</html>
