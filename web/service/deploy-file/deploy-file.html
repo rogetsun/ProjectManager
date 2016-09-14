@@ -38,16 +38,18 @@
                        ng-disabled="deploying>=1">
                 {{deploying==3?'重新部署':'开始部署'}}
             </md-button>
-            <md-button ng-show="deploying==2" class="md-primary md-raised" ng-click="restartDeployInstance()">
+            <md-button ng-show="deploying==2" ng-disabled="restarting==1" class="md-primary md-raised"
+                       ng-click="restartDeployInstance()">
                 重启实例
             </md-button>
-            <md-button ng-show="deploying==2" class="md-primary md-raised" ng-click="closeDeployFileDialog()">
+            <md-button ng-show="deploying==2" ng-disabled="restarting==1" class="md-primary md-raised"
+                       ng-click="closeDeployFileDialog()">
                 关闭
             </md-button>
         </md-card-content>
 
         <md-card-content
-                style="font-size: 12px;line-height: 20px;height: 24px;min-height: 24px;padding: 0 16px 2px ;background-color: #ddd;"
+                style="font-size: 12px;line-height: 24px;height: 24px;min-height: 24px;padding: 0 16px;background-color: #ddd;"
                 layout="row" ng-show="deployStatus" layout="start center">
             <md-divider></md-divider>
             {{deployStatus}}

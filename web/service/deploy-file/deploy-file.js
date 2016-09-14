@@ -85,6 +85,8 @@ angular.module('deploy-file', [])
             $scope.restartDeployInstance = function () {
                 // todo 重启实例
                 $scope.deployStatus = '开始重启应用实例，请稍等。。。';
+                $scope.restarting = 1;
+                $scope.$apply();
             }
         }])
 ;
