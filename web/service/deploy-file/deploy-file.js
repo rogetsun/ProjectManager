@@ -9,6 +9,7 @@ angular.module('deploy-file', [])
                 return $mdDialog.show({
                     templateUrl: 'service/deploy-file/deploy-file.html',
                     locals: {files: files, projectID: projectID},
+                    escapeToClose: false,
                     resolve: {
                         deployInstances: ['deployInstanceService', function (deployInstanceService) {
                             return deployInstanceService.getDeployInstances(projectID).then(function (res) {
