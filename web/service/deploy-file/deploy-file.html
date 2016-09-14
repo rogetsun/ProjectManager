@@ -34,8 +34,15 @@
             </md-select>
             <md-checkbox style="margin-top: 20px;" ng-model="autoRestart">自动重启实例</md-checkbox>
             <span flex></span>
-            <md-button class="md-primary md-raised" ng-click="deploy()" ng-disabled="deploying>=1">
-                开始部署
+            <md-button ng-show="deploying!=2" class="md-primary md-raised" ng-click="deploy()"
+                       ng-disabled="deploying>=1">
+                {{deploying==3?'重新部署':'开始部署'}}
+            </md-button>
+            <md-button ng-show="deploying==2" class="md-primary md-raised" ng-click="restartDeployInstance()">
+                重启实例
+            </md-button>
+            <md-button ng-show="deploying==2" class="md-primary md-raised" ng-click="closeDeployFileDialog()">
+                关闭
             </md-button>
         </md-card-content>
 

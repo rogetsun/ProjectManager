@@ -37,7 +37,7 @@ angular.module('deploy-file', [])
             $scope.deploy = function () {
                 $scope.deployStatus = '准备部署实例更新';
                 var data = {deployInstance: $scope.deployInstance, files: files};
-                $scope.deploying = 1;
+                $scope.deploying = 1;// 1代表部署中
                 uvWebsocket.websocket('ws/project/' + projectID + '/deploy')
                     .onopen(function (event) {
                         console.log(event);
@@ -58,6 +58,7 @@ angular.module('deploy-file', [])
                                 $scope.$apply();
                             } else if (msg.msg_type == 'cmd_over') {
                                 $scope.deployStatus = 'ftp部署完毕';
+                                $scope.$apply();
                             }
                         }
                     })
@@ -66,19 +67,24 @@ angular.module('deploy-file', [])
                         if (event.code != 0) {
                             uvDialog.show(event.reason + "[" + event.code + "]");
                             $scope.deployStatus = event.reason + "[" + event.code + "]";
+                            $scope.deploying = 3; //3代表失败
                         } else {
                             $scope.deployStatus = "文件更新部署完毕!";
-                            $scope.$apply();
                             if ($scope.autoRestart) {
-                                // todo restart deploy instance
-                                console.log('自动重启实例')
+                                console.log('自动重启实例');
+                                $scope.restartDeployInstance();
                             } else {
                                 console.log('不自动重启实例')
                             }
-                            $scope.deploying = 2;
+                            $scope.deploying = 2;//2代表成功
+                            $scope.$apply();
                         }
                     })
                     .send(JSON.stringify(data));
             };
+            $scope.restartDeployInstance = function () {
+                // todo 重启实例
+                $scope.deployStatus = '开始重启应用实例，请稍等。。。';
+            }
         }])
 ;
