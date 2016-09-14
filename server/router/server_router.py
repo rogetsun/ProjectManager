@@ -1,6 +1,9 @@
 # coding:utf-8
+import commands
+import threading
+import time
 from flask import json
-
+from tornado.web import asynchronous
 from server import mk_res
 from server.log_config import logger
 from server.router.base_router import BaseHandler, router
@@ -31,7 +34,18 @@ class ServerHandler(BaseHandler):
 
 
 class ServersHandler(BaseHandler):
+    @asynchronous
     @router
     def get(self):
         ss = server_service.get_servers()
+        # this = self
+        # def test():
+        #     print commands.getoutput('/Users/uv2sun/ftp.sh')
+        #     this.write(mk_res(ss))
+        #     this.finish()
+        #
+        # t = threading.Thread(target=test)
+        # t.start()
+        # print commands.getoutput('/Users/uv2sun/ftp.sh')
         self.write(mk_res(ss))
+        self.finish()

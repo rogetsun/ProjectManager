@@ -18,27 +18,32 @@
                 <th>版本</th>
                 </thead>
 
-                <tr ng-repeat="f in files track by $index">
+                <tr ng-repeat="f in files |orderBy:'deployOK'"
+                    ng-class="f.deployOK == 1?'success':''">
                     <td>{{f.file_id}}</td>
-                    <td>{{f.ft_folder + f.file_path_name}}</td>
-                    <td>{{f.ft_deploy_path || (f.ft_folder + f.file_path_name)}}</td>
+                    <td>{{f.file_path_name}}</td>
+                    <td>{{f.ft_deploy_path || f.ft_folder}}</td>
                     <td>{{f.max_version || f.version}}</td>
                 </tr>
             </table>
         </md-content>
-        <md-card-content style="font-size: 12px;line-height: 20px;height: 24px;min-height: 24px;padding:4px 16px;"
-                         ng-show="deployStatus" layout="row" layout="start center">
-            {{deployStatus}}
-        </md-card-content>
+
         <md-card-content layout="row" layout-align="start center" flex="initial" style="height: 50px;">
             <md-select ng-model="deployInstance" style="width: 220px;margin-right: 10px;" placeholder="选择部署实例">
                 <md-option ng-value="di" ng-repeat="di in deployInstances">{{di.di_name}}@{{di.server_ip}}</md-option>
             </md-select>
-            <md-checkbox style="margin-top: 20px;" ng-model="isRestart">自动重启实例</md-checkbox>
+            <md-checkbox style="margin-top: 20px;" ng-model="autoRestart">自动重启实例</md-checkbox>
             <span flex></span>
-            <md-button class="md-primary md-raised" ng-click="deploy()">
+            <md-button class="md-primary md-raised" ng-click="deploy()" ng-disabled="deploying>=1">
                 开始部署
             </md-button>
+        </md-card-content>
+
+        <md-card-content
+                style="font-size: 12px;line-height: 20px;height: 24px;min-height: 24px;padding: 0 16px 2px ;background-color: #ddd;"
+                layout="row" ng-show="deployStatus" layout="start center">
+            <md-divider></md-divider>
+            {{deployStatus}}
         </md-card-content>
     </md-card>
 </md-dialog>

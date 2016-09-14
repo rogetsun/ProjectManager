@@ -148,7 +148,11 @@ angular.module('file.controller', ['ngFileUpload'])
                         var fp = file.path ? file.path.substring(0, file.path.lastIndexOf("/")) : '';
                         Upload.upload({
                             url: 'project/' + project.project_id + '/file',
-                            data: {file: file, folder: ($scope.folder || "") + "/" + fp, ft_id: $scope.ft.ft_id}
+                            data: {
+                                file: file,
+                                folder: ($scope.folder ? $scope.folder : '') + (fp ? '/' + fp : ''),
+                                ft_id: $scope.ft.ft_id
+                            }
                         }).then(function (resp) {
                             uploadingFiles.splice(uploadingFiles.indexOf(file.name), 1);
                             var res = resp.data;
@@ -200,6 +204,7 @@ angular.module('file.controller', ['ngFileUpload'])
             };
 
             function getFileInfo(files) {
+                // todo 直接拖文件进来 路径有问题
                 angular.forEach(files, function (f) {
                     if ($scope.filesJSON[f.path || f.name]) {
                         delete $scope.filesJSON[f.path || f.name];
@@ -210,7 +215,12 @@ angular.module('file.controller', ['ngFileUpload'])
                     }
                     $scope.filesJSON[f.path || f.name] = f;
                     var fp = f.path ? f.path.substring(0, f.path.lastIndexOf("/")) : '';
-                    fileService.getFile(project.project_id, $scope.ft.ft_id, ($scope.folder || '') + '/' + fp, f.name).then(function (res) {
+                    fileService.getFile(
+                        project.project_id,
+                        $scope.ft.ft_id,
+                        ($scope.folder ? $scope.folder : '') + (fp ? '/' + fp : ''),
+                        f.name
+                    ).then(function (res) {
                         if (res && res.ret_code == 0) {
                             f.curr_version = res.data ? res.data.curr_version : '无';
                         }
@@ -226,7 +236,7 @@ angular.module('file.controller', ['ngFileUpload'])
                     }
                     delete $scope.filesJSON[file.name];
                 }
-            }
+            };
 
             $scope.finish = function () {
                 $scope.$parent.reloadState();
