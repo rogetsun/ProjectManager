@@ -39,6 +39,6 @@ def add_file_type(param, db=Mysql()):
 def update_file_type(param, db=Mysql()):
     param.setdefault('ft_deploy_path', '')
     r = db.update('''update pm.d_file_type set
-    ft_name=%(ft_name)s, ft_folder=%(ft_folder)s, ft_deploy_path=%(ft_deploy_path)s, ft_desc=%(ft_desc)s,
+    ft_name=%(ft_name)s, ft_folder=%(ft_folder)s, ft_deploy_path=%(ft_deploy_path)s, ft_desc=%(ft_desc)s
     where ft_id=%(ft_id)s''', param)
     return r
