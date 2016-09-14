@@ -4,7 +4,8 @@
             <md-card-header class="uv-card-header" layout="row" layout-align="start center">
                 <span>文件部署</span>
                 <span flex></span>
-                <md-button style="background-color: transparent;box-shadow: none;" ng-click="closeDeployFileDialog()"
+                <md-button aria-label="button" style="background-color: transparent;box-shadow: none;"
+                           ng-click="closeDeployFileDialog()"
                            class="md-fab md-mini" ng-disabled="deploying==1||restarting==1">
                     <md-icon md-svg-icon="close" class="md-mini"></md-icon>
                 </md-button>
@@ -19,7 +20,7 @@
                 <th>版本</th>
                 </thead>
 
-                <tr ng-repeat="f in files |orderBy:'deployOK'"
+                <tr ng-repeat="f in files"
                     ng-class="f.deployOK == 1?'success':''">
                     <td>{{f.file_id}}</td>
                     <td>{{f.file_path_name}}</td>
@@ -29,7 +30,7 @@
             </table>
         </md-content>
 
-        <md-card-content layout="row" layout-align="start center" flex="initial" style="height: 50px;">
+        <md-card-content layout="row" layout-align="start center" flex="initial" style="min-height: 50px;height: 50px;">
             <md-select ng-model="deployInstance" ng-disabled="deploying==1||deploying==2||restarting==1"
                        style="width: 220px;margin-right: 10px;" placeholder="选择部署实例">
                 <md-option ng-value="di" ng-repeat="di in deployInstances">{{di.di_name}}@{{di.server_ip}}</md-option>
@@ -39,15 +40,17 @@
                 自动重启实例
             </md-checkbox>
             <span flex></span>
-            <md-button ng-show="deploying!=2" class="md-primary md-raised" ng-click="deploy()"
+            <md-button aria-label="button" ng-show="deploying!=2" class="md-primary md-raised" ng-click="deploy()"
                        ng-disabled="deploying==1">
                 {{deploying==3?'重新部署':'开始部署'}}
             </md-button>
-            <md-button ng-show="deploying==2" ng-disabled="restarting==1" class="md-primary md-raised"
+            <md-button aria-label="button" ng-show="deploying==2" ng-disabled="restarting==1"
+                       class="md-primary md-raised"
                        ng-click="restartDeployInstance()">
                 重启实例
             </md-button>
-            <md-button ng-show="deploying==2" ng-disabled="restarting==1" class="md-primary md-raised"
+            <md-button aria-label="button" ng-show="deploying==2" ng-disabled="restarting==1"
+                       class="md-primary md-raised"
                        ng-click="closeDeployFileDialog()">
                 关闭
             </md-button>

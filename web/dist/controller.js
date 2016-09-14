@@ -1,6 +1,6 @@
 /*!
  * projectmanager - JS for Debug
- * @licence projectmanager - v1.0.0 (2016-09-14)
+ * @licence projectmanager - v1.0.0 (2016-09-15)
  */
 /**
  * Created by uv2sun on 16/9/11.
@@ -109,8 +109,9 @@ angular.module('fileType.controller', [])
             $scope.folderChange = function (folder, key) {
                 if (folder) {
                     var f = folder.trim();
-
-                    if (f != '/' && f) {
+                    if (f == '/') {
+                        f = '';
+                    } else if (f != '/' && f) {
                         if (f.charAt(0) != '/') {
                             f = '/' + f;
                         }
@@ -344,10 +345,14 @@ angular.module('file.controller', ['ngFileUpload'])
             $scope.folderChange = function () {
                 if ($scope.folder) {
                     if ($scope.folder.length > 0) {
-                        if ($scope.folder.charAt(0) != '/')
-                            $scope.folder = '/' + $scope.folder;
-                        if ($scope.folder.charAt($scope.folder.length - 1) == '/') {
-                            $scope.folder = $scope.folder.substr(0, $scope.folder.length - 1)
+                        if ($scope.folder == '/') {
+                            $scope.folder = '';
+                        } else {
+                            if ($scope.folder.charAt(0) != '/')
+                                $scope.folder = '/' + $scope.folder;
+                            if ($scope.folder.charAt($scope.folder.length - 1) == '/') {
+                                $scope.folder = $scope.folder.substr(0, $scope.folder.length - 1)
+                            }
                         }
                     }
                 }

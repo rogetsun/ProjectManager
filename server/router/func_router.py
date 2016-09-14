@@ -32,9 +32,11 @@ class FuncHandler(BaseHandler):
             logger.exception(e)
             raise e
 
+    @asynchronous
     @router
     def get(self, func_id):
         self.write(mk_res(data=func_service.get_func_files(func_id)))
+        self.finish()
 
 
 class FuncsHandler(BaseHandler):

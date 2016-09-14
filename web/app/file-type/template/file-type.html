@@ -71,7 +71,7 @@
                     </md-input-container>
                     <md-input-container>
                         <label>文件类型归属目录</label>
-                        <input type="text" required name="ft_folder" ng-model="ft.ft_folder" flex
+                        <input type="text" name="ft_folder" ng-model="ft.ft_folder" flex
                                ng-blur="folderChange(ft.ft_folder, 'ft_folder')">
                         <div ng-messages="fileTypeForm.ft_folder.$error" ng-show="fileTypeForm.ft_folder.$dirty">
                             <div ng-message="required">请输入文件类型归属目录</div>

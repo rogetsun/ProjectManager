@@ -34,7 +34,14 @@ angular.module('uv.service.websocket', [])
             var _this = this;
             return {
                 websocket: function (url) {
-                    var su = 'ws://' + _this._config.host + _this._config.appName + '/' + url;
+                    var su;
+                    if (url.substr(0, 5) == 'ws://') {
+                        su = url;
+                    }
+                    else {
+                        su = 'ws://' + _this._config.host + _this._config.appName + '/' + url;
+                    }
+                    console.log('ready to create websocket:' + su);
                     this.ws = $.websocket(su);
                     return this;
                 },

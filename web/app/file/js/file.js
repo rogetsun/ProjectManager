@@ -181,10 +181,14 @@ angular.module('file.controller', ['ngFileUpload'])
             $scope.folderChange = function () {
                 if ($scope.folder) {
                     if ($scope.folder.length > 0) {
-                        if ($scope.folder.charAt(0) != '/')
-                            $scope.folder = '/' + $scope.folder;
-                        if ($scope.folder.charAt($scope.folder.length - 1) == '/') {
-                            $scope.folder = $scope.folder.substr(0, $scope.folder.length - 1)
+                        if ($scope.folder == '/') {
+                            $scope.folder = '';
+                        } else {
+                            if ($scope.folder.charAt(0) != '/')
+                                $scope.folder = '/' + $scope.folder;
+                            if ($scope.folder.charAt($scope.folder.length - 1) == '/') {
+                                $scope.folder = $scope.folder.substr(0, $scope.folder.length - 1)
+                            }
                         }
                     }
                 }

@@ -51,8 +51,9 @@ angular.module('fileType.controller', [])
             $scope.folderChange = function (folder, key) {
                 if (folder) {
                     var f = folder.trim();
-
-                    if (f != '/' && f) {
+                    if (f == '/') {
+                        f = '';
+                    } else if (f != '/' && f) {
                         if (f.charAt(0) != '/') {
                             f = '/' + f;
                         }
