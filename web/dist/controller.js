@@ -759,7 +759,7 @@ angular.module('mfu.controller', ['ngFileUpload'])
                             }
                         }
                     });
-
+                    console.log($filter('filter')($scope.editFunc.files, {isUpdate: 1}));
                 };
 
                 /**

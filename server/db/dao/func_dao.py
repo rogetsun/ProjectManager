@@ -58,10 +58,13 @@ def select_all_func(project_id):
 
 def select_func_files(func_id):
     db = Mysql()
-    r = db.getAll("""select a.ff_id, a.func_id,a.file_version as curr_version, b.*
-        from pm.d_func_file a, pm.d_file_his b
-        where a.file_id=b.file_id and a.file_version = b.version and a.func_id=%s
-        order by b.ft_id""", (func_id,))
+    r = db.getAll("""select a.ff_id, a.func_id,a.file_version as curr_version, b.*,
+                            c.ft_name,c.ft_folder,c.ft_deploy_path
+         from pm.d_func_file a, pm.d_file_his b, pm.d_file_type c
+        where a.file_id=b.file_id and a.file_version = b.version
+          and b.ft_id = c.ft_id
+          and a.func_id=%s
+        order by b.ft_id, b.file_path_name""", (func_id,))
     db.dispose()
     return r
 

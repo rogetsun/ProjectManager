@@ -200,7 +200,6 @@ angular.module('mfu.controller', ['ngFileUpload'])
                             }
                         }
                     });
-
                 };
 
                 /**
@@ -292,6 +291,7 @@ angular.module('mfu.controller', ['ngFileUpload'])
                         }
                     };
                     toUp();
+                    // todo 调用部署service
                 };
 
             }

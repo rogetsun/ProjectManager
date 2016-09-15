@@ -5,7 +5,15 @@ angular.module('deploy-file', [])
     .service('deployFileService', [
         '$mdDialog',
         function ($mdDialog) {
+            /**
+             *
+             * @param projectID
+             * @param files file数组，
+             *      要求每个file都有ft_folder, ft_deploy_path, d_file表所有字段,部署的文件version或者max_version字段
+             * @returns {promise}
+             */
             this.show = function (projectID, files) {
+                console.log(files);
                 return $mdDialog.show({
                     templateUrl: 'service/deploy-file/deploy-file.html',
                     locals: {files: files, projectID: projectID},
@@ -88,7 +96,6 @@ angular.module('deploy-file', [])
                     .send(JSON.stringify(data));
             };
             $scope.restartDeployInstance = function () {
-                // todo 重启实例
                 $scope.deployStatus = '开始重启应用实例，请稍等。。。';
                 $scope.restarting = 1;
                 uvWebsocket.websocket('ws://' + $scope.deployInstance.server_ip + ":9128/ws/exec")
