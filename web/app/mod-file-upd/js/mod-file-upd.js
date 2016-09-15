@@ -204,7 +204,7 @@ angular.module('mfu.controller', ['ngFileUpload'])
 
                 /**
                  * 取消单个文件上传更新
-                 * @param ff_id
+                 * @param f
                  */
                 $scope.cancelSingleUpload = function (f) {
                     delete f.isUpdate;
