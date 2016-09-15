@@ -91,7 +91,7 @@ angular.module('deploy-file', [])
                 // todo 重启实例
                 $scope.deployStatus = '开始重启应用实例，请稍等。。。';
                 $scope.restarting = 1;
-                uvWebsocket.websocket('ws://' + $scope.deployInstance.server_ip + ":2204/ws/exec")
+                uvWebsocket.websocket('ws://' + $scope.deployInstance.server_ip + ":9128/ws/exec")
                     .onopen(function (event) {
                         console.log(event);
                     })

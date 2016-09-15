@@ -124,8 +124,7 @@ class Ftper(threading.Thread):
             msg['msg_type'] = 'status'
             msg['msg'] = 'ftp quit'
             self.websocket.write_message(json.dumps(msg))
-            for i in range(100):
-                pass
+            time.sleep(1)
             self.websocket.close(code=0)
         except Exception as e:
             logger.exception(e)

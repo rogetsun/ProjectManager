@@ -11,6 +11,7 @@ def get_file_types(project_id):
 
 def add_file_type(file_type, opr):
     param = dict()
+    param.setdefault('ft_folder', '')
     param.update(file_type)
     param.update(opr)
     db = Mysql()
