@@ -44,6 +44,13 @@
                        ng-disabled="deploying==1">
                 {{deploying==3?'重新部署':'开始部署'}}
             </md-button>
+
+            <md-button aria-label="button" ng-show="deploying==2" ng-disabled="restarting==1"
+                       class="md-primary md-raised"
+                       ng-click="tailLog()">
+                查看日志
+            </md-button>
+
             <md-button aria-label="button" ng-show="deploying==2" ng-disabled="restarting==1"
                        class="md-primary md-raised"
                        ng-click="restartDeployInstance()">

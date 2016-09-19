@@ -27,13 +27,15 @@ angular.module('deploy-file', [])
                     },
                     controller: 'deploy-fileController'
                 })
-            }
+            };
         }
     ])
 
     .controller('deploy-fileController', [
         '$scope', 'deployFileService', 'files', 'projectID', '$mdDialog', 'uvDialog', 'uvWebsocket', 'deployInstances',
-        function ($scope, deployFileService, files, projectID, $mdDialog, uvDialog, uvWebsocket, deployInstances) {
+        'deployInstanceLog',
+        function ($scope, deployFileService, files, projectID, $mdDialog, uvDialog, uvWebsocket, deployInstances,
+                  deployInstanceLog) {
             $scope.files = files;
             $scope.filesJSON = {};
             angular.forEach($scope.files, function (f) {
@@ -157,6 +159,9 @@ angular.module('deploy-file', [])
                             ]
                         }
                     ));
+            };
+            $scope.tailLog = function () {
+                deployInstanceLog.show($scope.deployInstance);
             }
         }])
 ;
