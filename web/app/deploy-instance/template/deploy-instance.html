@@ -21,7 +21,7 @@
             <p>部署路径：{{di.di_root_path}}</p>
             <p>启动脚本：{{di.di_start_shell}}</p>
             <p>停止脚本：{{di.di_stop_shell}}</p>
-            <p>日志脚本：{{di.di_log_shell}}</p>
+            <p>日志文件：{{di.di_log_shell}}</p>
         </md-card-content>
         <md-card-content style="height: 50px;">
             <!--<md-button ng-if="di.di_start_shell" class="text-success md-mini">启动</md-button>-->
@@ -40,7 +40,9 @@
                 <md-fab-actions>
                     <md-button class="md-primary md-mini md-fab" style="margin:5px;">启动</md-button>
                     <md-button class="md-warn md-mini md-fab" style="margin:5px;">停止</md-button>
-                    <md-button class="md-primary md-mini md-fab" style="margin:5px;">日志</md-button>
+                    <md-button class="md-primary md-mini md-fab" style="margin:5px;" ng-click="catLog(di)">
+                        日志
+                    </md-button>
                 </md-fab-actions>
             </md-fab-speed-dial>
         </md-card-content>
@@ -109,10 +111,10 @@
                     </div>
                 </md-input-container>
                 <md-input-container>
-                    <label>查看日志脚本（请使用绝对路径）</label>
+                    <label>日志文件（请使用绝对路径）</label>
                     <input type="text" name="di_log_shell" ng-model="di.di_log_shell" required>
                     <div ng-messages="diForm.di_log_shell.$error" ng-show="diForm.di_log_shell.$dirty">
-                        <div ng-message="required">请输入查看日志脚本</div>
+                        <div ng-message="required">请输入日志日志文件</div>
                     </div>
                 </md-input-container>
             </form>

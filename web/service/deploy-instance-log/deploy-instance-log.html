@@ -1,0 +1,31 @@
+<md-dialog class="md-primary" style="min-width: 1000px;overflow: hidden;" md-theme="darkTheme2">
+    <md-card style="margin:0;" layout="column" layout-align="start stretch">
+        <md-toolbar>
+            <md-card-header class="uv-card-header" layout="row" layout-align="start center">
+                <span>[{{deployInstance.di_name}}]日志</span>
+                <span flex></span>
+                <md-select ng-model="n" ng-change="tail()" aria-label="n">
+                    <md-option value="100">100</md-option>
+                    <md-option value="200">200</md-option>
+                    <md-option value="500">500</md-option>
+                    <md-option value="1000">1000</md-option>
+                    <md-option value="1500">1500</md-option>
+                    <md-option value="3000">3000</md-option>
+                </md-select>
+                <md-button aria-label="button" style="background-color: transparent;box-shadow: none;"
+                           ng-click="tail()" class="md-fab md-mini">
+                    <md-icon md-svg-icon="eye" class="md-mini"></md-icon>
+                </md-button>
+                <md-button aria-label="button" style="background-color: transparent;box-shadow: none;"
+                           ng-click="closeDeployFileDialog()" class="md-fab md-mini">
+                    <md-icon md-svg-icon="close" class="md-mini"></md-icon>
+                </md-button>
+            </md-card-header>
+        </md-toolbar>
+        <md-content style="overflow: scroll;" class="md-padding">
+            <pre style="margin:0;padding:0;background-color: transparent;color: #dddddd;border:none;">
+                {{logContent}}
+            </pre>
+        </md-content>
+    </md-card>
+</md-dialog>

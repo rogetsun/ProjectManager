@@ -9,8 +9,8 @@
 angular.module('deploy-instance', ['deploy-instance.controller']);
 angular.module('deploy-instance.controller', [])
     .controller('deployInstanceController', [
-        '$scope', '$timeout', '$mdSidenav', 'serverService', 'uvmAlert', 'deployInstanceService',
-        function ($scope, $timeout, $mdSidenav, serverService, uvmAlert, deployInstanceService) {
+        '$scope', '$timeout', '$mdSidenav', 'serverService', 'uvmAlert', 'deployInstanceService', 'deployInstanceLog',
+        function ($scope, $timeout, $mdSidenav, serverService, uvmAlert, deployInstanceService, deployInstanceLog) {
             $timeout(function () {
                 deployInstanceService.getDeployInstances($scope.project.project_id).then(function (res) {
                     $scope.deployInstances = res.data;
@@ -63,6 +63,10 @@ angular.module('deploy-instance.controller', [])
                 });
             };
 
+
+            $scope.catLog = function (di) {
+                deployInstanceLog.show(di);
+            }
         }
     ])
 ;
