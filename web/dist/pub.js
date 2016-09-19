@@ -6532,8 +6532,7 @@ angular.module('uv.service.websocket', [])
                     var su;
                     if (url.substr(0, 5) == 'ws://') {
                         su = url;
-                    }
-                    else {
+                    } else {
                         su = 'ws://' + _this._config.host + _this._config.appName + '/' + url;
                     }
                     console.log('ready to create websocket:' + su);

@@ -1,10 +1,11 @@
 # coding:utf-8
+import json
 import os
 import threading
-import json
 import time
-from tornado.websocket import WebSocketHandler
 from ftplib import FTP
+
+from tornado.websocket import WebSocketHandler
 
 from server import server_config
 from server.log_config import logger
@@ -14,6 +15,9 @@ __author__ = 'uv2sun'
 
 class DeployFilesWSHandler(WebSocketHandler):
     project_id = None
+
+    def check_origin(self, origin):
+        return True
 
     def data_received(self, chunk):
         pass
@@ -32,7 +36,7 @@ class DeployFilesWSHandler(WebSocketHandler):
 
     def on_message(self, message):
 
-        print message
+        # print message
         msg = json.loads(message)
         di = msg.get('deployInstance')
         files = msg.get('files')
@@ -45,8 +49,10 @@ class DeployFilesWSHandler(WebSocketHandler):
                 ftp.start()
             except Exception as e:
                 logger.exception(e)
+                self.write_message(json.dumps({"msg_type": 'cmd_err', 'msg': e.message}))
                 self.close(code=2, reason=e.message)
         else:
+            self.write_message(json.dumps({"msg_type": 'cmd_err', 'msg': '没有部署实例或文件'}))
             self.close(code=1, reason='没有部署实例或文件')
 
     def on_close(self):
@@ -124,10 +130,14 @@ class Ftper(threading.Thread):
             msg['msg_type'] = 'status'
             msg['msg'] = 'ftp quit'
             self.websocket.write_message(json.dumps(msg))
-            time.sleep(1)
+            msg['msg_type'] = 'cmd_end'
+            msg['msg'] = '文件部署成功'
+            self.websocket.write_message(json.dumps(msg))
+            time.sleep(0.1)
             self.websocket.close(code=0)
         except Exception as e:
             logger.exception(e)
+            self.websocket.write_message(json.dumps({'msg_type': 'cmd_err', 'msg': e.message}))
             self.websocket.close(code=2, reason=e.message)
 
     def put_file(self, ftp_file, local_file):
@@ -140,7 +150,7 @@ class Ftper(threading.Thread):
             if f is "":
                 continue
             else:
-                if self.ftp_client.nlst().count(f) == 0:
+                if self.ftp_client.nlst().count(f) == 0 and f != ".":
                     self.ftp_client.mkd(f)
             self.ftp_client.cwd(f)
             self.websocket.write_message({'msg_type': 'status', 'msg': 'cd %s ok' % (f,)})

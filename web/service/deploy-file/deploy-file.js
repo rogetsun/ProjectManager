@@ -65,6 +65,19 @@ angular.module('deploy-file', [])
                                 $scope.focusFile = f;
                             } else if (msg.msg_type == 'cmd_over') {
                                 $scope.deployStatus = 'ftp部署完毕';
+                            } else if (msg.msg_type == 'cmd_err') {
+                                uvDialog.show(msg.msg);
+                                $scope.deploying = 3; //3代表失败
+                                $scope.deployStatus = msg.msg;
+                            } else if (msg.msg_type == 'cmd_end') {
+                                $scope.deployStatus = "文件更新部署完毕!";
+                                if ($scope.autoRestart) {
+                                    console.log('自动重启实例');
+                                    $scope.restartDeployInstance();
+                                } else {
+                                    console.log('不自动重启实例')
+                                }
+                                $scope.deploying = 2;//2代表成功
                             }
                             try {
                                 $scope.$apply();
@@ -74,24 +87,24 @@ angular.module('deploy-file', [])
                     })
                     .onclose(function (event) {
                         console.log(event);
-                        if (event.code != 0) {
-                            uvDialog.show(event.reason + "[" + event.code + "]");
-                            $scope.deployStatus = event.reason + "[" + event.code + "]";
-                            $scope.deploying = 3; //3代表失败
-                        } else {
-                            $scope.deployStatus = "文件更新部署完毕!";
-                            if ($scope.autoRestart) {
-                                console.log('自动重启实例');
-                                $scope.restartDeployInstance();
-                            } else {
-                                console.log('不自动重启实例')
-                            }
-                            $scope.deploying = 2;//2代表成功
-                            try {
-                                $scope.$apply();
-                            } catch (e) {
-                            }
-                        }
+                        // if (event.code != 0) {
+                        //     uvDialog.show(event.reason + "[" + event.code + "]");
+                        //     $scope.deployStatus = event.reason + "[" + event.code + "]";
+                        //     $scope.deploying = 3; //3代表失败
+                        // } else {
+                        //     $scope.deployStatus = "文件更新部署完毕!";
+                        //     if ($scope.autoRestart) {
+                        //         console.log('自动重启实例');
+                        //         $scope.restartDeployInstance();
+                        //     } else {
+                        //         console.log('不自动重启实例')
+                        //     }
+                        //     $scope.deploying = 2;//2代表成功
+                        //     try {
+                        //         $scope.$apply();
+                        //     } catch (e) {
+                        //     }
+                        // }
                     })
                     .send(JSON.stringify(data));
             };
@@ -103,29 +116,38 @@ angular.module('deploy-file', [])
                         console.log(event);
                     })
                     .onmessage(function (msgEvent) {
-                        var msg = msgEvent.data;
+                        var msg = JSON.parse(msgEvent.data);
                         console.log(msg);
-                        $scope.deployStatus = msg;
+                        if (msg.msg_type == 'status') {
+                            $scope.deployStatus = msg.msg;
+                        } else if (msg.msg_type == 'cmd_err') {
+                            uvDialog.show('重启应用实例失败，' + msg.msg);
+                            $scope.deployStatus = '重启应用实例失败！[' + msg.msg + ']';
+                            $scope.restarting = 3;
+                        } else if (msg.msg_type == 'cmd_end') {
+                            $scope.deployStatus = '实例重启成功';
+                            $scope.restarting = 2;
+                        }
                         $scope.$apply();
                     })
                     .onclose(function (event) {
                         console.log(event);
-                        if (event.code == 0) {
-                            $scope.deployStatus = '重启应用实例成功完成！';
-                            $scope.restarting = 2;
-                            try {
-                                $scope.$apply();
-                            } catch (e) {
-                            }
-                        } else {
-                            uvDialog.show('重启应用实例失败，exit=' + event.code + ", " + event.reason);
-                            $scope.deployStatus = '重启应用实例失败！[' + event.code + ']';
-                            $scope.restarting = 3;
-                            try {
-                                $scope.$apply();
-                            } catch (e) {
-                            }
-                        }
+                        // if (event.code == 0) {
+                        //     $scope.deployStatus = '重启应用实例成功完成！';
+                        //     $scope.restarting = 2;
+                        //     try {
+                        //         $scope.$apply();
+                        //     } catch (e) {
+                        //     }
+                        // } else {
+                        //     uvDialog.show('重启应用实例失败，exit=' + event.code + ", " + event.reason);
+                        //     $scope.deployStatus = '重启应用实例失败！[' + event.code + ']';
+                        //     $scope.restarting = 3;
+                        //     try {
+                        //         $scope.$apply();
+                        //     } catch (e) {
+                        //     }
+                        // }
                     })
                     .send(JSON.stringify(
                         {

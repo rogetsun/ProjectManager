@@ -29,7 +29,17 @@ angular.module('deploy-instance.controller', [])
              * @param di
              */
             $scope.defDI = function (di) {
-                $scope.di = di || $scope.di || {di_name: '实例' + ($scope.deployInstances.length + 1)};
+                if (di) {
+                    $scope.di = di;
+                } else {
+                    if ($scope.di) {
+                        if ($scope.di.di_id) {
+                            $scope.di = {di_name: '实例' + ($scope.deployInstances.length + 1)};
+                        }
+                    } else {
+                        $scope.di = {di_name: '实例' + ($scope.deployInstances.length + 1)};
+                    }
+                }
                 $mdSidenav('di-def-sidenav').open();
             };
 

@@ -1,6 +1,6 @@
 /*!
  * projectmanager - JS for Debug
- * @licence projectmanager - v1.0.0 (2016-09-15)
+ * @licence projectmanager - v1.0.0 (2016-09-19)
  */
 /**
  * Created by uv2sun on 16/9/11.
@@ -33,7 +33,17 @@ angular.module('deploy-instance.controller', [])
              * @param di
              */
             $scope.defDI = function (di) {
-                $scope.di = di || $scope.di || {di_name: '实例' + ($scope.deployInstances.length + 1)};
+                if (di) {
+                    $scope.di = di;
+                } else {
+                    if ($scope.di) {
+                        if ($scope.di.di_id) {
+                            $scope.di = {di_name: '实例' + ($scope.deployInstances.length + 1)};
+                        }
+                    } else {
+                        $scope.di = {di_name: '实例' + ($scope.deployInstances.length + 1)};
+                    }
+                }
                 $mdSidenav('di-def-sidenav').open();
             };
 
@@ -759,12 +769,11 @@ angular.module('mfu.controller', ['ngFileUpload'])
                             }
                         }
                     });
-                    console.log($filter('filter')($scope.editFunc.files, {isUpdate: 1}));
                 };
 
                 /**
                  * 取消单个文件上传更新
-                 * @param ff_id
+                 * @param f
                  */
                 $scope.cancelSingleUpload = function (f) {
                     delete f.isUpdate;
@@ -851,6 +860,7 @@ angular.module('mfu.controller', ['ngFileUpload'])
                         }
                     };
                     toUp();
+                    // todo 调用部署service
                 };
 
             }
