@@ -34,6 +34,8 @@ for h in staticHandlers + ws_handlers + handlers:
     if url.__len__() > 0 and url[-1] == "/":
         url = url[0:-1]
     tmp_url = "%s%s" % (server_config.server_route_prefix, url)
+    if tmp_url.__len__() == 0:
+        tmp_url = "/"
     tmp_handler = (tmp_url,) + h[1:]
     logger.debug(tmp_handler)
     tmp_handlers.append(tmp_handler)
