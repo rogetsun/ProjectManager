@@ -112,7 +112,8 @@ class Ftper(threading.Thread):
                 logger.debug('real file path:%s' % (file_path,))
                 ftp_file = '%s%s' % (file_path, f['file_path_name'])
                 local_file = '%s/%s/%s@%s%s' % (
-                    server_config.project_file_folder, self.project_id, f['file_id'], f['max_version'] or f['version'],
+                    server_config.project_file_folder, self.project_id, f['file_id'],
+                    f.get('max_version') or f.get('version'),
                     os.path.splitext(f['file_path_name'])[1]
                 )
                 # ftp文件

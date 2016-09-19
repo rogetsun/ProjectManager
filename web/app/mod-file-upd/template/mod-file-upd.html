@@ -164,8 +164,12 @@
             </md-card>
         </md-content>
         <md-content layout="row" layout-align="center center">
-            <!--<md-button class="md-primary md-raised" ng-click="saveFunc()" ng-disabled="funcForm.$invalid">保存</md-button>-->
+            <md-button class="md-primary md-raised" ng-click="deployFile()"
+                       ng-disabled="(editFunc.files|filter:{isUpdate:2})==0">
+                部署更新文件
+            </md-button>
             <md-button class="" ng-click="exitFunc()">关闭</md-button>
+
         </md-content>
     </md-card>
 </md-sidenav>

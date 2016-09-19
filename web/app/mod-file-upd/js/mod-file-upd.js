@@ -291,9 +291,18 @@ angular.module('mfu.controller', ['ngFileUpload'])
                         }
                     };
                     toUp();
-                    // todo 调用部署service
                 };
 
+            }
+            /**
+             * 部署文件相关代码
+             */
+            {
+                $scope.deployFile = function () {
+                    var files = $filter('filter')($scope.editFunc.files, {isUpdate: 2});
+                    console.log(files);
+                    deployFileService.show($scope.project.project_id, files);
+                }
             }
         }])
 ;
