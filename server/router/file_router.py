@@ -75,6 +75,7 @@ class FileDownHandler(BaseHandler):
             self.render("error.html", ret_code="404", ret_msg="[%s]文件不存在" % (f.get('file_path_name'),))
         else:
             self.render("dl.html",
+                        baseURL=server_config.server_route_prefix,
                         href='dlf/%s/%s@%s%s' % (
                             f.get('project_id'), file_id, version, os.path.splitext(f.get('file_path_name'))[1]),
                         file=os.path.basename(f.get('file_path_name')))

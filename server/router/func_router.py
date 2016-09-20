@@ -102,6 +102,7 @@ class FuncDownloadHandler(BaseHandler):
             zip_pkg.close()
 
             self.render("dl.html", href='dl/' + os.path.basename(real_zip_file_name),
+                        baseURL=server_config.server_route_prefix,
                         file=os.path.basename(real_zip_file_name))
             self.finish()
         else:
