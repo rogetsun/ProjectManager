@@ -8,12 +8,15 @@ from ftplib import FTP
 from tornado.websocket import WebSocketHandler
 
 from server import server_config
+from server.db.db_pool import Mysql
 from server.log_config import logger
+from server.router.base_router import BaseHandler
+from server.service import deploy_file_service
 
 __author__ = 'uv2sun'
 
 
-class DeployFilesWSHandler(WebSocketHandler):
+class DeployFilesWSHandler(WebSocketHandler, BaseHandler):
     project_id = None
 
     def check_origin(self, origin):
@@ -35,25 +38,36 @@ class DeployFilesWSHandler(WebSocketHandler):
         # threading.Thread(target=beat, args=(this,)).start()
 
     def on_message(self, message):
+        try:
+            # print message
+            msg = json.loads(message)
+            di = msg.get('deployInstance')
+            files = msg.get('files')
+            db = Mysql()
+            opr = self.current_user
+            opr['op_time'] = int(time.time() * 1000)
+            deploy_file_service.save_deploy_rec(project_id=self.project_id, deploy_instance=di, files=files, opr=opr,
+                                                db=db)
+            db.dispose()
 
-        # print message
-        msg = json.loads(message)
-        di = msg.get('deployInstance')
-        files = msg.get('files')
-        if di and files:
-            ftp = Ftper(ftp_host=di.get('server_ip'), ftp_user=di.get('server_ftp_user'),
-                        ftp_password=di.get('server_ftp_password'), files=files, root_path=di.get('di_root_path'),
-                        project_id=self.project_id, websocket=self)
-            print ftp
-            try:
-                ftp.start()
-            except Exception as e:
-                logger.exception(e)
-                self.write_message(json.dumps({"msg_type": 'cmd_err', 'msg': e.message}))
-                self.close(code=2, reason=e.message)
-        else:
-            self.write_message(json.dumps({"msg_type": 'cmd_err', 'msg': '没有部署实例或文件'}))
-            self.close(code=1, reason='没有部署实例或文件')
+            if di and files:
+                ftp = Ftper(ftp_host=di.get('server_ip'), ftp_user=di.get('server_ftp_user'),
+                            ftp_password=di.get('server_ftp_password'), files=files, root_path=di.get('di_root_path'),
+                            project_id=self.project_id, websocket=self)
+                print ftp
+                try:
+                    ftp.start()
+                except Exception as e:
+                    logger.exception(e)
+                    self.write_message(json.dumps({"msg_type": 'cmd_err', 'msg': e.message}))
+                    self.close(code=2, reason=e.message)
+            else:
+                self.write_message(json.dumps({"msg_type": 'cmd_err', 'msg': '没有部署实例或文件'}))
+                self.close(code=1, reason='没有部署实例或文件')
+        except Exception as e:
+            logger.exception(e)
+            self.write_message(json.dumps({'msg_type': 'cmd_err', 'msg': e.message}))
+            self.close(code=1, reason=e.message)
 
     def on_close(self):
         print 'close'
