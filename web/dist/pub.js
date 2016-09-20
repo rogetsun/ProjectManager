@@ -6311,29 +6311,34 @@ dTree.prototype.cc_parent = function (parent_node_ai, select_flag) {
     }
 };
 
-dTree.prototype.cc_children = function (node_ai, select_flag) {
+/**
+ *
+ * @param node_ai 当前节点下表
+ * @param select_flag
+ * @param idx 开始寻找节点下表
+ */
+dTree.prototype.cc_children = function (node_ai, select_flag, idx) {
     var node = this.aNodes[node_ai];
-    document.getElementById("c" + this.obj + node.id).checked = select_flag;
-    if (!select_flag) {
-        this.removeSeletedNode(node_ai);
-    } else {
-        this.addSelectedNode(node_ai);
-    }
-    if (node._hc) {
-        for (var i = parseInt(node_ai) + 1; i < this.aNodes.length; i++) {
-            if (this.aNodes[i].pid == node.id) {
-                this.cc_children(i, select_flag);
+    for (var i = idx || node_ai; i < this.aNodes.length; i++) {
+        if (this.aNodes[i].pid == node.id) {
+            document.getElementById("c" + this.obj + this.aNodes[i].id).checked = select_flag;
+            if (!select_flag) {
+                this.removeSeletedNode(i);
+            } else {
+                this.addSelectedNode(i);
+            }
+            if (this.aNodes[i]._hc) {
+                this.cc_children(i, select_flag, 1);
             }
         }
     }
-
 };
 
 dTree.prototype.cc = function (node_ai, parent_node_ai) {
     //首先获取这个多选框的id
     var node = this.aNodes[node_ai];
     var cs = document.getElementById("c" + this.obj + node.id).checked;
-    this.cc_children(node_ai, cs);
+    this.cc_children(node_ai, cs, 1);
     // this.cc_parent(parent_node_ai, cs); //根据实际需求决定,当前项目不需要同时选中父级节点
 
 //    var n;
