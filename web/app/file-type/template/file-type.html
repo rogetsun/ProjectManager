@@ -43,7 +43,7 @@
                 </a>
             </td>
         </tr>
-        <tr ng-show="!file_types|| file_types.length ==0">
+        <tr ng-show="!file_types|| file_types.length ==0" ng-if="currentLoginUser.role_id==0">
             <td colspan="6">无文件类型,点我
                 <a href="" ng-click="defFileType($event)">添加</a>
             </td>

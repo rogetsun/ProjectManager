@@ -47,7 +47,8 @@
             </md-fab-speed-dial>
         </md-card-content>
     </md-card>
-    <md-card style="height: 200px;width:250px;cursor: pointer;" ng-click="defDBInstance()">
+    <md-card style="height: 200px;width:250px;cursor: pointer;" ng-click="defDBInstance()"
+             ng-if="currentLoginUser.role_id==0">
         <md-tooltip md-delay="2000">新增一个数据库实例</md-tooltip>
         <md-card-content layout="column" layout="center center" layout-fill>
             <md-icon md-svg-icon="plus" style="color:#ccc;"></md-icon>
