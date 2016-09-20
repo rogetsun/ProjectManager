@@ -1,5 +1,6 @@
 # coding:utf-8
 from server.router.base_router import PageNotFoundHandler
+from server.router.db_instance_router import DBInstanceHandler
 from server.router.deploy_instance_router import DeployInstanceHandler, DeployInstancesHandler
 from server.router.func_file_router import FuncFileHandler
 from server.router.server_router import ServerHandler, ServersHandler
@@ -47,6 +48,12 @@ handlers = [
     # deploy-instance
     , ('/project/(\d+)/deploy-instance', DeployInstanceHandler)
     , ('/project/(\d+)/deploy-instances', DeployInstancesHandler)
+
+    # db-instance
+    , ('/project/(\d+)/db-instances', DBInstanceHandler)
+    , ('/project/(\d+)/db-instance', DBInstanceHandler)
+    , ('/project/(\d+)/db-instance/(\d+)', DBInstanceHandler)
+    , ('/db-instance/(\d+)/execsql', DBInstanceHandler)
 
     # 404
     , ('.*', PageNotFoundHandler)

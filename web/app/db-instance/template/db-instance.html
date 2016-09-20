@@ -1,0 +1,135 @@
+<md-content layout="row" layout-align="start start" layout-wrap>
+
+    <md-card ng-repeat="di in dbInstances" style="min-width: 300px;">
+        <md-card-header class="uv-card-header">
+            <span>{{di.db_name}}</span>
+            <span flex></span>
+            <span style="cursor:pointer;margin-left:10px;" ng-click="defDBInstance(di)"
+                  ng-if="currentLoginUser.role_id==0">
+                <md-icon class="md-mini" md-svg-icon="draw">
+                    <md-tooltip md-delay="2000">修改</md-tooltip>
+                </md-icon>
+            </span>
+            <span style="cursor:pointer;margin-left:10px;" ng-click="delDBInstance(di)"
+                  ng-if="currentLoginUser.role_id==0">
+                <md-icon class="md-mini" md-svg-icon="delete">
+                    <md-tooltip md-delay="2000">删除</md-tooltip>
+                </md-icon>
+            </span>
+        </md-card-header>
+        <md-card-content>
+            <p>主机：{{di.db_host}}</p>
+            <p>端口：{{di.db_port}}</p>
+            <p>数据库用户：{{di.db_user}}</p>
+            <p>数据库：{{di.db_name}}</p>
+        </md-card-content>
+        <md-card-content style="height: 50px;">
+            <!--<md-button ng-if="di.di_start_shell" class="text-success md-mini">启动</md-button>-->
+            <!--<md-button ng-if="di.di_stop_shell" class="text-danger md-mini">停止</md-button>-->
+            <!--<md-button class="text-primary md-mini md-fab">日志</md-button>-->
+            <md-fab-speed-dial md-direction="left" style="bottom:10px;right:10px;"
+                               class="md-scale md-fab-bottom-right" md-open="di.isOpen">
+                <md-fab-trigger>
+                    <md-button aria-label="Add..." class="md-fab md-mini"
+                               ng-style="{'box-shadow':di.isOpen?'':'0 0 0 0 #eee'}"
+                               style="margin:5px;background-color: transparent;">
+                        <md-icon md-svg-icon="cogwheel" style="color:#666;"></md-icon>
+                    </md-button>
+                </md-fab-trigger>
+
+                <md-fab-actions>
+                    <md-button class="md-primary md-mini md-fab" style="margin:5px;">启动</md-button>
+                    <md-button class="md-warn md-mini md-fab" style="margin:5px;">停止</md-button>
+                    <md-button class="md-primary md-mini md-fab" style="margin:5px;" ng-click="openExecSqlDialog(di)">
+                        SQL
+                    </md-button>
+                </md-fab-actions>
+            </md-fab-speed-dial>
+        </md-card-content>
+    </md-card>
+    <md-card style="height: 200px;width:250px;cursor: pointer;" ng-click="defDBInstance()">
+        <md-tooltip md-delay="2000">新增一个数据库实例</md-tooltip>
+        <md-card-content layout="column" layout="center center" layout-fill>
+            <md-icon md-svg-icon="plus" style="color:#ccc;"></md-icon>
+        </md-card-content>
+    </md-card>
+
+</md-content>
+
+<md-sidenav md-component-id="di-def-sidenav" class="md-sidenav-right" style="min-width: 500px;">
+    <md-card style="margin:0;" layout-fill>
+        <md-card-header class="uv-card-header" layout="row" style="height:50px;">
+            <span flex layout-align="center center" layout="row">实例配置</span>
+        </md-card-header>
+        <md-card-content layout="column" style="overflow: scroll;">
+            <form name="diForm" layout="column" layout-align="start stretch">
+                <md-input-container>
+                    <label>数据库名称</label>
+                    <input type="text" name="db_name" ng-model="di.db_name" required>
+                    <div ng-messages="diForm.db_name.$error" ng-show="diForm.db_name.$dirty">
+                        <div ng-message="required">请输入数据库名称</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>数据库主机</label>
+                    <input type="text" name="db_host" ng-model="di.db_host" required>
+                    <div ng-messages="diForm.db_host.$error" ng-show="diForm.db_host.$dirty">
+                        <div ng-message="required">请输入主机IP</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>数据库端口</label>
+                    <input type="text" name="db_port" ng-model="di.db_port" required>
+                    <div ng-messages="diForm.db_port.$error" ng-show="diForm.db_port.$dirty">
+                        <div ng-message="required">请输入项目部署路径</div>
+                    </div>
+                </md-input-container>
+                <div layout="row" layout-align="start stretch">
+                    <md-input-container flex>
+                        <label>数据库用户</label>
+                        <input type="text" name="db_user" ng-model="di.db_user" required>
+                        <div ng-messages="diForm.db_user.$error" ng-show="diForm.db_user.$dirty">
+                            <div ng-message="required">请输入数据库用户</div>
+                        </div>
+                    </md-input-container>
+                    <md-input-container flex>
+                        <label>数据库口令</label>
+                        <input type="text" name="db_passwd" ng-model="di.db_passwd" required>
+                        <div ng-messages="diForm.db_passwd.$error" ng-show="diForm.db_passwd.$dirty">
+                            <div ng-message="required">请输入数据库口令</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </form>
+        </md-card-content>
+        <md-card-footer layout="row" layout-align="center center">
+            <md-button class="md-primary md-raised" ng-disabled="diForm.$invalid"
+                       ng-click="saveDB()">
+                确定保存
+            </md-button>
+        </md-card-footer>
+    </md-card>
+</md-sidenav>
+
+<script type="text/ng-template" id="exec-sql-dialog">
+    <md-dialog style="min-width: 700px;" md-theme="darkTheme">
+        <md-toolbar class="md-toolbar-tools">
+            SQL脚本执行
+        </md-toolbar>
+        <md-dialog-content layout="column" layout-align="start stretch">
+            <md-input-container>
+                <label>输入SQL脚本</label>
+                <textarea rows="10" ng-model="sql" ng-disabled="executing==1"></textarea>
+            </md-input-container>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="closeDialog()" ng-disabled="executing==1"
+                       ng-class="executing==2?'md-primary md-raised':''">关闭
+            </md-button>
+            <md-button ng-show="executing!=2" class="md-primary md-raised" ng-click="execSql()"
+                       ng-disabled="executing==1">
+                执行SQL
+            </md-button>
+        </md-dialog-actions>
+    </md-dialog>
+</script>

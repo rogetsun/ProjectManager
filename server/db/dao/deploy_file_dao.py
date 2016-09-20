@@ -16,3 +16,10 @@ def save_deploy_files_rec(project_id, dr_id, files, db):
         db.insertOne("""insert into pm.d_deploy_files_rec(dr_id, project_id, file_id, version)
                     VALUES (%s, %s, %s, %s)
                   """, (dr_id, project_id, f.get('file_id'), f.get('max_version') or f.get('version')))
+
+
+def flag_failure(dr_id, message):
+    db = Mysql()
+    db.update("""update pm.d_deploy_rec set status='error', note=%s where dr_id=%s""",
+              (message, dr_id))
+    db.dispose()

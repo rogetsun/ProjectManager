@@ -46,14 +46,13 @@ class DeployFilesWSHandler(WebSocketHandler, BaseHandler):
             db = Mysql()
             opr = self.current_user
             opr['op_time'] = int(time.time() * 1000)
-            deploy_file_service.save_deploy_rec(project_id=self.project_id, deploy_instance=di, files=files, opr=opr,
-                                                db=db)
+            dr_id = deploy_file_service.save_deploy_rec(project_id=self.project_id, deploy_instance=di, files=files,
+                                                        opr=opr, db=db)
             db.dispose()
-
             if di and files:
                 ftp = Ftper(ftp_host=di.get('server_ip'), ftp_user=di.get('server_ftp_user'),
                             ftp_password=di.get('server_ftp_password'), files=files, root_path=di.get('di_root_path'),
-                            project_id=self.project_id, websocket=self)
+                            project_id=self.project_id, websocket=self, dr_id=dr_id)
                 print ftp
                 try:
                     ftp.start()
@@ -78,7 +77,7 @@ class Ftper(threading.Thread):
     need_files = []
     over_files = []
 
-    def __init__(self, ftp_host, ftp_user, ftp_password, root_path, files, websocket, project_id):
+    def __init__(self, ftp_host, ftp_user, ftp_password, root_path, files, websocket, project_id, dr_id):
         super(Ftper, self).__init__()
         self.ftp_host = ftp_host
         self.ftp_user = ftp_user
@@ -87,6 +86,7 @@ class Ftper(threading.Thread):
         self.need_files = files
         self.websocket = websocket
         self.project_id = project_id
+        self.dr_id = dr_id
 
     def ftp(self):
         try:
@@ -152,6 +152,10 @@ class Ftper(threading.Thread):
             self.websocket.close(code=0)
         except Exception as e:
             logger.exception(e)
+            try:
+                deploy_file_service.flag_failure(self.dr_id, e.message)
+            except Exception as e1:
+                logger.exception(e1)
             self.websocket.write_message(json.dumps({'msg_type': 'cmd_err', 'msg': e.message}))
             self.websocket.close(code=2, reason=e.message)
 

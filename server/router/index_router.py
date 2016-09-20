@@ -67,7 +67,7 @@ class UserListHandler(BaseHandler):
 class LogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie(server_config.user_cookie_key)
-        self.redirect(server_config.server_route_prefix)
+        self.redirect(server_config.server_route_prefix or '/')
 
 
 if __name__ == "__main__":

@@ -75,7 +75,12 @@ angular.module('app.router', ['ui.router'])
                 controller: 'serverListController',
                 templateUrl: 'app/server/template/server-list.html'
             })
-
+            //数据库管理
+            .state('pd.db-instance', {
+                url: '/db-instance',
+                controller: 'dbInstanceController',
+                templateUrl: 'app/db-instance/template/db-instance.html'
+            })
     }])
     .run(['$rootScope', '$state', function ($rootScope, $state) {
         console.log('app.router.run');
@@ -93,8 +98,9 @@ angular.module('app.router', ['ui.router'])
             , {id: 11, name: '项目文件类型', pid: 1, state: 'pd.ft', root_distance: 2}
             , {id: 12, name: '项目文件', pid: 1, state: 'pd.files', root_distance: 2}
             , {id: 13, name: '项目模块', pid: 1, state: 'pd.module', root_distance: 2, admin: 1}
-            , {id: 14, name: '项目模块文件更新', pid: 1, state: 'pd.mod-file-upd', root_distance: 2}
+            , {id: 14, name: '数据库实例', pid: 1, state: 'pd.db-instance', root_distance: 2}
             , {id: 15, name: '部署实例', pid: 1, state: 'pd.deploy-instance', root_distance: 2}
+            , {id: 16, name: '项目模块文件更新', pid: 1, state: 'pd.mod-file-upd', root_distance: 2}
 
         ];
         var root = {name: 'root', id: 0, pid: -1, root_distance: 0};
