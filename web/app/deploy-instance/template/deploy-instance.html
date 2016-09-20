@@ -4,12 +4,13 @@
         <md-card-header class="uv-card-header">
             <span>{{di.di_name}}</span>
             <span flex></span>
-            <span style="cursor:pointer;margin-left:10px;" ng-click="defDI(di)">
+            <span style="cursor:pointer;margin-left:10px;" ng-click="defDI(di)" ng-if="currentLoginUser.role_id==0">
                 <md-icon class="md-mini" md-svg-icon="draw">
                     <md-tooltip md-delay="2000">修改[{{di.di_name}}]</md-tooltip>
                 </md-icon>
             </span>
-            <span style="cursor:pointer;margin-left:10px;" ng-click="delDeployInstance(di)">
+            <span style="cursor:pointer;margin-left:10px;" ng-click="delDeployInstance(di)"
+                  ng-if="currentLoginUser.role_id==0">
                 <md-icon class="md-mini" md-svg-icon="delete">
                     <md-tooltip md-delay="2000">删除[{{di.di_name}}]</md-tooltip>
                 </md-icon>
