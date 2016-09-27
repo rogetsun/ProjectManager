@@ -1,3 +1,4 @@
+#!/usr/bin/env /usr/local/bin/python
 # coding:utf-8
 from tornado.ioloop import IOLoop
 from app import app

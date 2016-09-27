@@ -39,8 +39,7 @@
                 </md-fab-trigger>
 
                 <md-fab-actions>
-                    <md-button class="md-primary md-mini md-fab" style="margin:5px;">启动</md-button>
-                    <md-button class="md-warn md-mini md-fab" style="margin:5px;">停止</md-button>
+                    <md-button class="md-warn md-mini md-fab" style="margin:5px;" ng-click="restartDeployInstance(di)">重启</md-button>
                     <md-button class="md-primary md-mini md-fab" style="margin:5px;" ng-click="catLog(di)">
                         日志
                     </md-button>

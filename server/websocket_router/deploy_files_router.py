@@ -116,14 +116,15 @@ class Ftper(threading.Thread):
                 msg['msg'] = 'ready to cd %s' % (self.root_path,)
                 logger.debug(msg)
                 self.websocket.write_message(json.dumps(msg))
-                self.ftp_client.cwd(self.root_path)
+                # self.ftp_client.cwd(self.root_path)
+                self.cd_folder(self.root_path, is_abs_path=True)
                 msg['msg'] = 'cd %s ok' % (self.root_path,)
                 logger.debug(msg)
                 self.websocket.write_message(json.dumps(msg))
 
                 logger.debug('ready to ftp file:%s' % (json.dumps(f),))
                 file_path = f['ft_deploy_path'] or f['ft_folder']
-                logger.debug('real file path:%s' % (file_path,))
+                logger.debug('==real file path:%s' % (file_path,))
                 ftp_file = '%s%s' % (file_path, f['file_path_name'])
                 local_file = '%s/%s/%s@%s%s' % (
                     server_config.project_file_folder, self.project_id, f['file_id'],
@@ -131,9 +132,10 @@ class Ftper(threading.Thread):
                     os.path.splitext(f['file_path_name'])[1]
                 )
                 # ftp文件
-                logger.debug('local_file:%s', (local_file,))
-                logger.debug('ftp_file:%s', (ftp_file,))
+                logger.debug('==local_file:%s', (local_file,))
+                logger.debug('==ftp_file:%s', (ftp_file,))
                 self.put_file(ftp_file=ftp_file, local_file=local_file)
+                logger.debug('ftp file ok file:%s' % (json.dumps(f)))
                 msg['msg_type'] = 'cmd_file'
                 msg['file'] = f
                 msg['msg'] = None
@@ -161,20 +163,54 @@ class Ftper(threading.Thread):
 
     def put_file(self, ftp_file, local_file):
         """执行ftp put操作，但是要循环建立远端目录"""
-        fps = ('%s' % (ftp_file,)).split(os.sep)
-        logger.debug(fps)
-        # 循环建立远端目录
-        for i in range(1, fps.__len__() - 1):
-            f = fps[i]
-            if f is "":
-                continue
-            else:
-                if self.ftp_client.nlst().count(f) == 0 and f != ".":
-                    self.ftp_client.mkd(f)
-            self.ftp_client.cwd(f)
-            self.websocket.write_message({'msg_type': 'status', 'msg': 'cd %s ok' % (f,)})
+        fps = os.path.split(ftp_file)
+        self.cd_folder(fps[0])
+        # fps = ('%s' % (ftp_file,)).split(os.sep)
+        # logger.debug(fps)
+        # # 循环建立远端目录
+        # for i in range(1, fps.__len__() - 1):
+        #     f = fps[i]
+        #     if f is "":
+        #         continue
+        #     else:
+        #         if self.ftp_client.nlst().count(f) == 0 and f != ".":
+        #             self.ftp_client.mkd(f)
+        #     self.ftp_client.cwd(f)
+        #     self.websocket.write_message({'msg_type': 'status', 'msg': 'cd %s ok' % (f,)})
         self.websocket.write_message({'msg_type': 'status', 'msg': u'开始上传[%s]' % (ftp_file,)})
         self.ftp_client.storbinary('STOR %s' % (fps[-1],), open(local_file))
+
+    def cd_folder(self, folder, is_abs_path=False):
+        logger.debug('ready to cd %s' % (folder,))
+        if folder is None or folder == '.' or folder == '':
+            return
+        if is_abs_path:
+            self.ftp_client.cwd("/")
+        fps = ('%s' % (folder,)).split(os.sep)
+        logger.debug(fps)
+
+        # 循环进入或建立远端目录
+        for i in range(1, fps.__len__()):
+            f = fps[i]
+            try:
+                if f == "":
+                    logger.debug('空目录，跳过')
+                    continue
+                else:
+                    if self.ftp_client.nlst().count(f) == 0 and f != ".":
+                        self.ftp_client.mkd(f)
+                self.ftp_client.cwd(f)
+            except Exception as e:
+                logger.exception(e)
+                time.sleep(1)
+                if f is "":
+                    continue
+                else:
+                    if self.ftp_client.nlst().count(f) == 0 and f != ".":
+                        self.ftp_client.mkd(f)
+                self.ftp_client.cwd(f)
+            self.websocket.write_message({'msg_type': 'status', 'msg': 'cd %s ok' % (f,)})
+        logger.debug("cd %s ok" % (folder,))
 
     def run(self):
         self.ftp()

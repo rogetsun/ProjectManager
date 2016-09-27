@@ -6338,6 +6338,11 @@ dTree.prototype.cc = function (node_ai, parent_node_ai) {
     //首先获取这个多选框的id
     var node = this.aNodes[node_ai];
     var cs = document.getElementById("c" + this.obj + node.id).checked;
+    if (!cs) {
+        this.removeSeletedNode(node_ai);
+    } else {
+        this.addSelectedNode(node_ai);
+    }
     this.cc_children(node_ai, cs, 1);
     // this.cc_parent(parent_node_ai, cs); //根据实际需求决定,当前项目不需要同时选中父级节点
 

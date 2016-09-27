@@ -5,8 +5,8 @@
 angular.module('deploy-instance', ['deploy-instance.controller']);
 angular.module('deploy-instance.controller', [])
     .controller('deployInstanceController', [
-        '$scope', '$timeout', '$mdSidenav', 'serverService', 'uvmAlert', 'deployInstanceService', 'deployInstanceLog',
-        function ($scope, $timeout, $mdSidenav, serverService, uvmAlert, deployInstanceService, deployInstanceLog) {
+        '$scope', '$timeout', '$mdSidenav', 'uvDialog', 'uvTip', 'uvWebsocket', 'serverService', 'uvmAlert', 'deployInstanceService', 'deployInstanceLog',
+        function ($scope, $timeout, $mdSidenav, uvDialog, uvTip, uvWebsocket, serverService, uvmAlert, deployInstanceService, deployInstanceLog) {
             $timeout(function () {
                 deployInstanceService.getDeployInstances($scope.project.project_id).then(function (res) {
                     $scope.deployInstances = res.data;
@@ -18,6 +18,30 @@ angular.module('deploy-instance.controller', [])
                     $scope.servers = res.data;
                 });
             });
+            $scope.restartDeployInstance = function (di) {
+                uvTip.showTip('开始重启应用实例，请稍等。。。');
+                uvWebsocket.websocket('ws://' + di.server_ip + ":9128/ws/exec")
+                    .onmessage(function (msgEvent) {
+                        uvTip.hideTip();
+                        var msg = JSON.parse(msgEvent.data);
+                        if (msg.msg_type == 'status') {
+                            uvTip.showTip(msg.msg);
+                        } else if (msg.msg_type == 'cmd_err') {
+                            uvDialog.show('重启应用实例失败，' + msg.msg);
+                        } else if (msg.msg_type == 'cmd_end') {
+                            uvTip.showTip('重启实例[' + di.di_name + '@' + di.server_ip + ']成功')
+                        }
+                        $scope.$apply();
+                    })
+                    .send(JSON.stringify(
+                        {
+                            cmds: [
+                                di.di_stop_shell,
+                                di.di_start_shell
+                            ]
+                        }
+                    ));
+            };
             /**
              * 部署实例列表
              * @type {Array}
